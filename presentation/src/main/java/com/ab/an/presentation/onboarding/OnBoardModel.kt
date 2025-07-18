@@ -1,6 +1,14 @@
 package com.ab.an.presentation.onboarding
 
 import com.ab.an.core.R
+import com.ab.an.core.utils.Constants.CONTROL_YOUR_SECURITY
+import com.ab.an.core.utils.Constants.EVERYTHING_IN_SINGLE_CLICK
+import com.ab.an.core.utils.Constants.FAST
+import com.ab.an.core.utils.Constants.FRICTIONLESS_SECURITY
+import com.ab.an.core.utils.Constants.OB_DESCRIPTION_1
+import com.ab.an.core.utils.Constants.OB_DESCRIPTION_2
+import com.ab.an.core.utils.Constants.PASS_BLOCK
+import com.ab.an.core.utils.Constants.SECURITY
 
 data class OnBoardModel(
     val imageRes: Int,
@@ -11,20 +19,20 @@ data class OnBoardModel(
 
 val onBoardModels = listOf(
     OnBoardModel(
-        headLine = "Security",
-        title = "Control your security",
-        description = "This application is build on blockchain so that you can get 100% security across websites & applications with single app.",
+        headLine = SECURITY,
+        title = CONTROL_YOUR_SECURITY,
+        description = OB_DESCRIPTION_1,
         imageRes = R.drawable.shield_tick
     ),
     OnBoardModel(
-        headLine = "Fast",
-        title = "Everything in single click",
-        description = "Add, generate, store, transfer, sync, export & copy all your passwords in single click. Use autofill for quick action without opening app.",
+        headLine = FAST,
+        title = EVERYTHING_IN_SINGLE_CLICK,
+        description = OB_DESCRIPTION_2,
         imageRes = R.drawable.box
     ),
     OnBoardModel(
-        title = "Passblock",
-        description = "Frictionless Security",
+        title = PASS_BLOCK,
+        description = FRICTIONLESS_SECURITY,
         imageRes = R.drawable.obthree
     )
 )

@@ -23,18 +23,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.ab.an.core.ui.components.PrimaryBoldText
+import com.ab.an.core.ui.components.PrimaryNormalText
+import com.ab.an.core.ui.components.PrimaryOutlinedButton
+import com.ab.an.core.ui.components.SecondaryButton
+import com.ab.an.core.utils.Constants
 import kotlinx.coroutines.delay
 
 @Composable
@@ -93,36 +98,22 @@ fun OnboardingScreen(innerPadding: PaddingValues, navToAuth: (isRegister: Boolea
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Button(
+            SecondaryButton(
                 onClick = {
                     navToAuth(true)
                 },
-                modifier = Modifier
-                    .fillMaxWidth(),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    text = "Register",
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(5.dp)
-                )
-            }
-            OutlinedButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                label = Constants.REGISTER,
+                modifier = Modifier.fillMaxWidth(),
+                labelFontSize = 20.sp
+            )
+            PrimaryOutlinedButton(
                 onClick = {
                     navToAuth(false)
                 },
-                shape = RoundedCornerShape(8.dp),
-                border = BorderStroke(width = 2.dp, color = MaterialTheme.colorScheme.primary)
-            ) {
-                Text(
-                    text = "Already have an account",
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(5.dp)
-                )
-            }
-
+                modifier = Modifier.fillMaxWidth(),
+                label = Constants.ALREADY_HAVE_ACCOUNT,
+                labelFontSize = 18.sp
+            )
         }
     }
 }
@@ -136,7 +127,6 @@ fun OnBoardItem(onBoardModel: OnBoardModel) {
                 .fillMaxSize()
                 .padding(horizontal = 20.dp),
         ) {
-
             Image(
                 painter = painterResource(id = onBoardModel.imageRes),
                 contentDescription = "",
@@ -144,12 +134,15 @@ fun OnBoardItem(onBoardModel: OnBoardModel) {
                     .padding(
                         vertical = 50.dp
                     )
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
+                colorFilter = ColorFilter.tint(
+                    color = MaterialTheme.colorScheme.primary
+                )
             )
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
-            Text(
+            PrimaryNormalText(
                 text = onBoardModel.headLine,
                 fontSize = 20.sp
             )
@@ -161,17 +154,16 @@ fun OnBoardItem(onBoardModel: OnBoardModel) {
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            Text(
+            PrimaryBoldText(
                 text = onBoardModel.title,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                fontSize = 24.sp
             )
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            Text(
+            PrimaryNormalText(
                 text = onBoardModel.description,
-                fontSize = 16.sp
+                fontSize = 16.sp,
             )
         }
     } else {
@@ -189,23 +181,20 @@ fun OnBoardItem(onBoardModel: OnBoardModel) {
                 painter = painterResource(id = onBoardModel.imageRes),
                 contentDescription = "",
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             )
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            Text(
+            PrimaryBoldText(
                 text = onBoardModel.title,
                 fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                textAlign = TextAlign.Center
             )
-            Text(
+            PrimaryNormalText(
                 text = onBoardModel.description,
                 fontSize = 20.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
+                textAlign = TextAlign.Center
             )
         }
     }

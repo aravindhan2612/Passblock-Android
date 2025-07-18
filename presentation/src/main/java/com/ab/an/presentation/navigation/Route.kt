@@ -8,5 +8,5 @@ sealed class Route(val showTopBar: Boolean): NavKey {
     @Serializable
     data object Onboarding : Route(showTopBar = false)
     @Serializable
-    data class  Auth(val name: String) : Route(showTopBar = true)
+    data class  Auth(val isRegister: Boolean = false) : Route(showTopBar = true)
 }

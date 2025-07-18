@@ -1,8 +1,12 @@
 package com.ab.an.presentation.navigation
 
 import android.annotation.SuppressLint
+import android.graphics.Color
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation3.runtime.entry
@@ -19,6 +23,7 @@ fun RootNavigation() {
     val backStack = rememberNavBackStack(Route.Onboarding)
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        containerColor = MaterialTheme.colorScheme.secondary
     ) { innerPadding ->
         NavDisplay(
             backStack = backStack,
@@ -28,12 +33,15 @@ fun RootNavigation() {
             entryProvider = entryProvider {
                 entry<Route.Onboarding> {
                     OnboardingScreen(innerPadding) {
-                        backStack.add(Route.Auth("Aravindhan"))
+                        backStack.add(Route.Auth(it))
                         backStack.removeFirstOrNull()
                     }
                 }
                 entry<Route.Auth> {
-                    AuthScreen(it.name) {
+                    AuthScreen(
+                        innerPadding = innerPadding,
+                        isRegister = it.isRegister
+                    ) {
                         backStack.removeLastOrNull()
                     }
                 }
