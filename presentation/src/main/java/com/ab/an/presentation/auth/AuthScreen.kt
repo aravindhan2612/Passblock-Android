@@ -1,7 +1,6 @@
 package com.ab.an.presentation.auth
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -9,32 +8,28 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SecondaryTabRow
 import androidx.compose.material3.Tab
-import androidx.compose.material3.TabIndicatorScope
-import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRowDefaults
-import androidx.compose.material3.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -44,97 +39,156 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.R
-import com.ab.an.core.ui.components.PrimaryBoldText
-import com.ab.an.core.ui.components.PrimaryNormalText
 import com.ab.an.core.utils.Constants
+import com.ab.an.presentation.components.PrimaryButton
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AuthScreen(
-    innerPadding: PaddingValues,
     isRegister: Boolean,
-    onClick: () -> Unit
+    onComplete: () -> Unit,
+    authViewModel: AuthViewModel = hiltViewModel()
 ) {
-
-    var state by remember { mutableIntStateOf(if (isRegister) 0 else 1) }
+    val state by authViewModel.state.collectAsStateWithLifecycle()
     val titles = listOf(Constants.REGISTER, Constants.LOGIN)
+    val pagerState =
+        rememberPagerState(initialPage = if (isRegister) 0 else 1, pageCount = { titles.size })
+    val coroutineScope = rememberCoroutineScope()
 
-    Column(
+    LaunchedEffect(state.authSuccess) {
+        if (state.authSuccess) {
+            onComplete()
+        }
+    }
+
+    Box(
         modifier = Modifier
-            .padding(innerPadding)
+            .windowInsetsPadding(WindowInsets.safeDrawing)
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Image(
-            painter = painterResource(R.drawable.auth_header_logo),
-            contentDescription = null,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-        )
-        OutlinedCard(
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(
-                    vertical = 36.dp
-                ),
-            border = BorderStroke(
-                width = 2.dp,
-                color = MaterialTheme.colorScheme.primary
-            ),
-            colors = CardDefaults.outlinedCardColors(
-                containerColor = MaterialTheme.colorScheme.secondary
-            ),
-            shape = RoundedCornerShape(16.dp)
+                .fillMaxSize()
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            SecondaryTabRow(
-                selectedTabIndex = state,
-                containerColor = Color.Transparent,
-                divider = {},
-                indicator = {
-                    TabRowDefaults.SecondaryIndicator(
-                        Modifier
-                            .zIndex(-1f)
-                            .tabIndicatorOffset(state)
-                            .fillMaxSize() // Make the indicator fill the tab space
-                            .padding(3.dp)
-                            .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
-                            .background(MaterialTheme.colorScheme.primary) // Filled button color
-                    )
-
-                },
+            Image(
+                painter = painterResource(R.drawable.auth_header_logo),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+            )
+            Column(
                 modifier = Modifier
-                    .padding(12.dp)
-                    .clip(
-                        RoundedCornerShape(8.dp)
-                    )
-                    .border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(8.dp)
-                    )
-                    .padding(4.dp)
+                    .fillMaxWidth()
+                    .weight(1f)
             ) {
-                titles.forEachIndexed { index, title ->
-                    val selected = state == index
-                    Tab(
-                        selected = selected,
-                        onClick = { state = index },
-                        text = {
-                            Text(
-                                text = title,
-                                fontSize = 16.sp,
-                                color = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                OutlinedCard(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            vertical = 36.dp
+                        ),
+                    border = BorderStroke(
+                        width = 2.dp,
+                        color = MaterialTheme.colorScheme.primary
+                    ),
+                    colors = CardDefaults.outlinedCardColors(
+                        containerColor = MaterialTheme.colorScheme.secondary
+                    ),
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    SecondaryTabRow(
+                        selectedTabIndex = pagerState.currentPage,
+                        containerColor = Color.Transparent,
+                        divider = {},
+                        indicator = {
+                            TabRowDefaults.SecondaryIndicator(
+                                Modifier
+                                    .zIndex(-1f)
+                                    .tabIndicatorOffset(pagerState.currentPage)
+                                    .fillMaxSize() // Make the indicator fill the tab space
+                                    .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+                                    .background(MaterialTheme.colorScheme.primary) // Filled button color
                             )
                         },
-                    )
+                        modifier = Modifier
+                            .padding(12.dp)
+                            .clip(
+                                RoundedCornerShape(8.dp)
+                            )
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(4.dp)
+                    ) {
+                        titles.forEachIndexed { index, title ->
+                            val selected = pagerState.currentPage == index
+                            Tab(
+                                modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                                selected = selected,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(index)
+                                    }
+                                },
+                                text = {
+                                    Text(
+                                        text = title,
+                                        fontSize = 16.sp,
+                                        color = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                                    )
+                                },
+                                enabled = !state.isLoading
+                            )
+                        }
+                    }
+                    HorizontalPager(
+                        state = pagerState,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(
+                                horizontal = 16.dp
+                            ),
+                        userScrollEnabled = false,
+                    ) { page ->
+                        when (page) {
+                            0 -> RegisterScreen(state)
+                            1 -> LoginScreen(state)
+                        }
+                    }
                 }
             }
-            PrimaryNormalText(
-                modifier = Modifier.align(Alignment.CenterHorizontally),
-                text = "Secondary tab ${state + 1} selected",
+            PrimaryButton(
+                onClick = {
+                    authViewModel.onEvent(AuthIntent.Auth(titles[pagerState.currentPage]))
+                },
+                label = titles[pagerState.currentPage],
+                modifier = Modifier.fillMaxWidth(),
+                labelFontSize = 18.sp,
+                enabled = !state.isLoading
             )
-
+        }
+        AnimatedVisibility(
+            visible = state.isLoading,
+        ) {
+            Column (
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(MaterialTheme.colorScheme.secondary.copy(
+                        alpha = 0.5f
+                    )),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                CircularProgressIndicator(
+                )
+            }
         }
     }
 }

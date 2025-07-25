@@ -23,3 +23,5 @@ rootProject.name = "Passblock"
 include(":app")
 include(":presentation")
 include(":core")
+include(":data")
+include(":domain")

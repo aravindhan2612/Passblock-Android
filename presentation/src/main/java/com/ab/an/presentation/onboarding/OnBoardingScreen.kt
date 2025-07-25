@@ -1,51 +1,59 @@
 package com.ab.an.presentation.onboarding
 
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.ab.an.core.ui.components.PrimaryBoldText
-import com.ab.an.core.ui.components.PrimaryNormalText
-import com.ab.an.core.ui.components.PrimaryOutlinedButton
-import com.ab.an.core.ui.components.SecondaryButton
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.utils.Constants
+import com.ab.an.presentation.components.PrimaryBoldText
+import com.ab.an.presentation.components.PrimaryButton
+import com.ab.an.presentation.components.PrimaryNormalText
+import com.ab.an.presentation.components.PrimaryOutlinedButton
 import kotlinx.coroutines.delay
 
 @Composable
-fun OnboardingScreen(innerPadding: PaddingValues, navToAuth: (isRegister: Boolean) -> Unit) {
-    val onBoardModels = onBoardModels
-    val pagerState = rememberPagerState(initialPage = 0, pageCount = { onBoardModels.size })
+fun OnboardingScreen(
+    navToAuth: (isRegister: Boolean) -> Unit,
+    onboardViewModel: OnboardViewModel = hiltViewModel()
+) {
+    val onBoardState by onboardViewModel.state.collectAsStateWithLifecycle()
+    val pagerState =
+        rememberPagerState(
+            initialPage = 0,
+            pageCount = { onboardViewModel.onBoardDetails.size })
+
     LaunchedEffect(Unit) {
         while (pagerState.currentPage < pagerState.pageCount - 1) {
             delay(2000)
@@ -53,10 +61,15 @@ fun OnboardingScreen(innerPadding: PaddingValues, navToAuth: (isRegister: Boolea
             pagerState.animateScrollToPage(nextPage)
         }
     }
+    LaunchedEffect(onBoardState.isComplete) {
+        if (onBoardState.isComplete) {
+            navToAuth(onBoardState.isRegister)
+        }
+    }
     Column(
         modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize(),
+            .windowInsetsPadding(WindowInsets.safeDrawing)
+            .fillMaxSize()
     ) {
         Row(
             Modifier
@@ -88,7 +101,7 @@ fun OnboardingScreen(innerPadding: PaddingValues, navToAuth: (isRegister: Boolea
                 .weight(1f)
                 .fillMaxWidth(),
         ) { page ->
-            OnBoardItem(onBoardModels[page])
+            OnBoardItem(onboardViewModel.onBoardDetails[page])
         }
 
         Column(
@@ -98,9 +111,9 @@ fun OnboardingScreen(innerPadding: PaddingValues, navToAuth: (isRegister: Boolea
                 .padding(20.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            SecondaryButton(
+            PrimaryButton(
                 onClick = {
-                    navToAuth(true)
+                    onboardViewModel.setOnBoardShown(true)
                 },
                 label = Constants.REGISTER,
                 modifier = Modifier.fillMaxWidth(),
@@ -108,7 +121,7 @@ fun OnboardingScreen(innerPadding: PaddingValues, navToAuth: (isRegister: Boolea
             )
             PrimaryOutlinedButton(
                 onClick = {
-                    navToAuth(false)
+                    onboardViewModel.setOnBoardShown(false)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 label = Constants.ALREADY_HAVE_ACCOUNT,
@@ -120,7 +133,7 @@ fun OnboardingScreen(innerPadding: PaddingValues, navToAuth: (isRegister: Boolea
 
 
 @Composable
-fun OnBoardItem(onBoardModel: OnBoardModel) {
+fun OnBoardItem(onBoardModel: OnBoardDetail) {
     if (onBoardModel.headLine.isNotBlank()) {
         Column(
             modifier = Modifier

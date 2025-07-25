@@ -15,4 +15,9 @@ object Constants {
         "Add, generate, store, transfer, sync, export & copy all your passwords in single click. Use autofill for quick action without opening app."
     const val PASS_BLOCK = "Passblock"
     const val FRICTIONLESS_SECURITY = "Frictionless Security"
+    const val USER_PREFERENCES_NAME = "com.ab.an.passblock.user_preferences"
+    const val PASSWORDS = "Passwords"
+    const val SEARCH = "Search"
+    const val SETTING = "Setting"
+    const val NEW_PASSWORD = "New Password"
 }
