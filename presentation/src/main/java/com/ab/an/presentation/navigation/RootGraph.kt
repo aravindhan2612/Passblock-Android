@@ -56,14 +56,20 @@ fun RootGraph(
                 )
             }
             entry<RootRoute.NestedGraph>{
-                NestedGraph(navToAddOrEditPassword = {
-                    backStack.add(RootRoute.AddOrEditPassword)
-                })
+                NestedGraph(
+                    navToAddOrEditPassword = {
+                    backStack.add(RootRoute.AddOrEditPassword(false))
+                },
+                    navToAuth = {
+                        backStack.removeLastOrNull()
+                        backStack.add(RootRoute.Auth(false))
+                    }
+                    )
             }
 
             entry<RootRoute.AddOrEditPassword> {
-                AddOrEditPasswordScreen(navToHome = {
-
+                AddOrEditPasswordScreen(it.isEditMode,navToHome = {
+                    backStack.removeLastOrNull()
                 })
             }
         }

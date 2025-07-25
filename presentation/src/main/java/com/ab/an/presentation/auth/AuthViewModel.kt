@@ -2,46 +2,170 @@ package com.ab.an.presentation.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ab.an.core.utils.Constants
+import com.ab.an.core.utils.Resource
+import com.ab.an.domain.model.User
 import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.usecase.UserLoginUseCase
+import com.ab.an.domain.usecase.UserRegisterUseCase
+import com.ab.an.domain.usecase.ValidateEmailUseCase
+import com.ab.an.domain.usecase.ValidatePasswordUseCase
+import com.ab.an.domain.usecase.ValidateUsernameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val appDataStoreRepository: AppDataStoreRepository
+    private val appDataStoreRepository: AppDataStoreRepository,
+    private val loginUseCase: UserLoginUseCase,
+    private val registerUseCase: UserRegisterUseCase,
+    private val validateEmailUseCase: ValidateEmailUseCase,
+    private val validatePasswordUseCase: ValidatePasswordUseCase,
+    private val validateUsernameUseCase: ValidateUsernameUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthState())
     val state = _state.asStateFlow()
 
     fun onEvent(event: AuthIntent) {
-        when(event) {
-            is AuthIntent.EmailChanged -> {}
+        when (event) {
+            is AuthIntent.EmailChanged -> {
+                _state.value = _state.value.copy(
+                    user = _state.value.user.copy(
+                        email = event.email,
+                    ),
+                    emailErrorMessage = ""
+                )
+            }
+
             is AuthIntent.Auth -> {
                 auth(event.title)
             }
-            is AuthIntent.PasswordChanged -> {}
-            is AuthIntent.UsernameChanged -> {}
+
+            is AuthIntent.PasswordChanged -> {
+                _state.value = _state.value.copy(
+                    user = _state.value.user.copy(
+                        password = event.password,
+                    ),
+                    passwordErrorMessage = ""
+                )
+            }
+
+            is AuthIntent.UsernameChanged -> {
+                _state.value = _state.value.copy(
+                    user = _state.value.user.copy(
+                        fullName = event.username,
+                    ),
+                    usernameErrorMessage = ""
+                )
+            }
+
+            AuthIntent.TabSwitched -> {
+                _state.value = AuthState()
+            }
         }
     }
 
     private fun auth(title: String) {
-        _state.value = _state.value.copy(
-            isLoading = true
-        )
-        val job = viewModelScope.launch {
-            delay(5000)
-            appDataStoreRepository.setUserLoggedIn(true)
+        if (title == Constants.REGISTER) {
+            register()
+        } else {
+            login()
         }
-        job.invokeOnCompletion{
+    }
+
+    private fun login() {
+        val emailResult = validateEmailUseCase(_state.value.user.email)
+        val passwordResult = validatePasswordUseCase(_state.value.user.password)
+        val hasError = listOf(
+            emailResult,
+            passwordResult
+        ).any { it.isNotBlank() }
+        if (hasError) {
             _state.value = _state.value.copy(
-                isLoading = false,
-                authSuccess = true
+                emailErrorMessage = emailResult,
+                passwordErrorMessage = passwordResult
             )
+            return
+        }
+        viewModelScope.launch {
+            loginUseCase(_state.value.user).onEach { result ->
+                when (result) {
+                    is Resource.Error<User> -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+                    }
+
+                    is Resource.Loading<User> -> {
+                        _state.value = _state.value.copy(
+                            isLoading = true,
+                            errorMessage = null,
+                            authSuccess = false
+                        )
+                    }
+
+                    is Resource.Success<User> -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            authSuccess = true
+                        )
+                    }
+                }
+            }.stateIn(viewModelScope)
+        }
+    }
+
+    private fun register() {
+        val usernameResult = validateUsernameUseCase(_state.value.user.fullName)
+        val emailResult = validateEmailUseCase(_state.value.user.email)
+        val passwordResult = validatePasswordUseCase(_state.value.user.password)
+        val hasError = listOf(
+            usernameResult,
+            emailResult,
+            passwordResult
+        ).any { it.isNotBlank() }
+        if (hasError) {
+            _state.value = _state.value.copy(
+                usernameErrorMessage = usernameResult,
+                emailErrorMessage = emailResult,
+                passwordErrorMessage = passwordResult
+            )
+            return
+        }
+        viewModelScope.launch {
+            registerUseCase(_state.value.user).onEach { result ->
+                when (result) {
+                    is Resource.Error<User> -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            errorMessage = result.message
+                        )
+
+                    }
+
+                    is Resource.Loading<User> -> {
+                        _state.value = _state.value.copy(
+                            isLoading = true,
+                            errorMessage = null,
+                            authSuccess = false
+                        )
+                    }
+
+                    is Resource.Success<User> -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            authSuccess = true
+                        )
+                    }
+                }
+            }.stateIn(viewModelScope)
         }
     }
 }

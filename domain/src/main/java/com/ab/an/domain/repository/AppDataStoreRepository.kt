@@ -8,4 +8,8 @@ interface AppDataStoreRepository {
 
     suspend fun setUserLoggedIn(value: Boolean)
     fun isUserLoggedIn(): Flow<Boolean>
+
+   suspend fun saveJwtToken(token: String?)
+
+    fun getJwtToken(): Flow<String?>
 }

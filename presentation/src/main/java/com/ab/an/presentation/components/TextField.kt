@@ -29,7 +29,7 @@ fun PrimaryOutlinedTextField(
         onValueChange = onValueChange,
         label = {
             PrimaryNormalText(
-                text = errorMessage.ifEmpty { label },
+                text = label
             )
         },
         isError = isError,

@@ -1,5 +1,6 @@
 package com.ab.an.presentation.auth
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -16,7 +17,9 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,10 +62,17 @@ fun AuthScreen(
     val pagerState =
         rememberPagerState(initialPage = if (isRegister) 0 else 1, pageCount = { titles.size })
     val coroutineScope = rememberCoroutineScope()
+    val context = LocalContext.current
 
     LaunchedEffect(state.authSuccess) {
         if (state.authSuccess) {
             onComplete()
+        }
+    }
+
+    LaunchedEffect(state.errorMessage) {
+        if (!state.errorMessage.isNullOrBlank()) {
+            Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -73,19 +84,20 @@ fun AuthScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .padding(16.dp)
         ) {
-            Image(
-                painter = painterResource(R.drawable.auth_header_logo),
-                contentDescription = null,
-                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-            )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
+                .verticalScroll(rememberScrollState()),
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                Image(
+                    painter = painterResource(R.drawable.auth_header_logo),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                )
                 OutlinedCard(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -135,6 +147,7 @@ fun AuthScreen(
                                 onClick = {
                                     coroutineScope.launch {
                                         pagerState.animateScrollToPage(index)
+                                        authViewModel.onEvent(AuthIntent.TabSwitched)
                                     }
                                 },
                                 text = {
@@ -158,8 +171,8 @@ fun AuthScreen(
                         userScrollEnabled = false,
                     ) { page ->
                         when (page) {
-                            0 -> RegisterScreen(state)
-                            1 -> LoginScreen(state)
+                            0 -> RegisterScreen(state, authViewModel)
+                            1 -> LoginScreen(state, authViewModel)
                         }
                     }
                 }

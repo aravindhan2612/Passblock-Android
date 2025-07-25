@@ -25,7 +25,7 @@ class DataStoreModule {
 
     @Provides
     @Singleton
-    fun bindAppDataStoreRepository(dataStore: DataStore<Preferences>): AppDataStoreRepository {
+    fun provideAppDataStoreRepository(dataStore: DataStore<Preferences>): AppDataStoreRepository {
         return AppDataStoreImpl(dataStore)
     }
 }

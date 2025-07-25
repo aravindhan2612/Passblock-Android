@@ -1,6 +1,9 @@
 package com.ab.an.presentation.navigation
 
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -20,7 +23,6 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.util.fastForEachIndexed
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entry
@@ -28,16 +30,17 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.ab.an.core.R
 import com.ab.an.presentation.analysis.AnalysisScreen
-import com.ab.an.presentation.components.PrimaryNormalText
 import com.ab.an.presentation.home.HomeScreen
 import com.ab.an.presentation.search.SearchScreen
 import com.ab.an.presentation.setting.SettingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NestedGraph(navToAddOrEditPassword: () -> Unit) {
+fun NestedGraph(
+    navToAddOrEditPassword: () -> Unit,
+    navToAuth: () -> Unit
+    ) {
     val backStack = rememberNavBackStack(BottomBarRoute.Home)
     var currentRoute: BottomBarRoute by rememberSaveable(
         stateSaver = BottomBarScreenSaver
@@ -52,7 +55,7 @@ fun NestedGraph(navToAddOrEditPassword: () -> Unit) {
                     titleContentColor = MaterialTheme.colorScheme.primary
                 ),
                 title = {
-                    PrimaryNormalText(
+                    Text(
                         text = currentRoute.title
                     )
                 },
@@ -61,7 +64,7 @@ fun NestedGraph(navToAddOrEditPassword: () -> Unit) {
                             onClick = {}
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.profile),
+                                imageVector = Icons.Default.Person,
                                 contentDescription = null
                             )
                         }
@@ -71,7 +74,7 @@ fun NestedGraph(navToAddOrEditPassword: () -> Unit) {
                             onClick = navToAddOrEditPassword
                         ) {
                             Icon(
-                                painter = painterResource(R.drawable.add),
+                                imageVector = Icons.Outlined.Add,
                                 contentDescription = null
                             )
                         }
@@ -134,7 +137,7 @@ fun NestedGraph(navToAddOrEditPassword: () -> Unit) {
                     SearchScreen(innerPadding)
                 }
                 entry<BottomBarRoute.Setting> {
-                    SettingScreen(innerPadding)
+                    SettingScreen(innerPadding, navToAuth = navToAuth)
                 }
             }
         )

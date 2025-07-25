@@ -5,4 +5,5 @@ sealed class AuthIntent {
     data class EmailChanged(val email: String) : AuthIntent()
     data class PasswordChanged(val password: String) : AuthIntent()
     data class Auth(val title: String) : AuthIntent()
+    data object TabSwitched : AuthIntent()
 }
