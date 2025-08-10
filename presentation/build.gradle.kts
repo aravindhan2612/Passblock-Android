@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
@@ -32,8 +34,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget("11")
     }
 }
 
@@ -66,4 +71,8 @@ dependencies {
     implementation(libs.hilt.navigation.compose)
 
     implementation(libs.lottie.compose)
+    implementation(libs.google.fonts)
+
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 }

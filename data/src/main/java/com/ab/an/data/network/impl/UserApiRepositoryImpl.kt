@@ -13,7 +13,8 @@ import javax.inject.Inject
 class UserApiRepositoryImpl @Inject constructor(
     private val apiService: UserApiService,
     private val appDataStoreRepository: AppDataStoreRepository
-) : UserApiRepository, BaseRepository() {
+) : UserApiRepository, BaseRepositoryImpl() {
+
     override fun register(user: User): Flow<Resource<User>> = flow {
 
         getResult {

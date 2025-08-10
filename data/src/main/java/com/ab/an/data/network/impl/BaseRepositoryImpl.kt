@@ -8,7 +8,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-abstract class BaseRepository {
+abstract class BaseRepositoryImpl {
 
     protected suspend fun <T> getResult(call: suspend () -> Response<T>): Flow<Resource<T>> = flow {
         emit(Resource.Loading())

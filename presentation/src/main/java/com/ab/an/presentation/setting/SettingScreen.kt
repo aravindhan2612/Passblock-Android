@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.presentation.components.PrimaryButton
-import com.ab.an.presentation.components.PrimaryNormalText
+import com.ab.an.presentation.components.PrimaryText
 
 
 @Composable
@@ -32,7 +32,7 @@ fun SettingScreen(innerPadding: PaddingValues, navToAuth: () -> Unit, viewModel:
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = androidx.compose.ui.Alignment.CenterHorizontally
     ) {
-        PrimaryNormalText(
+        PrimaryText(
             text = "Setting screen"
         )
         PrimaryButton(

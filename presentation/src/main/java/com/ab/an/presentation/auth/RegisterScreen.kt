@@ -37,7 +37,7 @@ fun RegisterScreen(authState: AuthState, authViewModel: AuthViewModel) {
     ) {
         PrimaryOutlinedTextField(
             value = authState.user.fullName,
-            onValueChange = { authViewModel.onEvent(AuthIntent.UsernameChanged(it)) },
+            onValueChange = { authViewModel.onIntent(AuthIntent.UsernameChanged(it)) },
             label = "Username",
             leadingIcon = { Icon(Icons.Default.Person, contentDescription = "Username Icon") },
             trailingIcon = {
@@ -52,7 +52,7 @@ fun RegisterScreen(authState: AuthState, authViewModel: AuthViewModel) {
         Spacer(modifier = Modifier.height(8.dp))
         PrimaryOutlinedTextField(
             value = authState.user.email,
-            onValueChange = { authViewModel.onEvent(AuthIntent.EmailChanged(it)) },
+            onValueChange = { authViewModel.onIntent(AuthIntent.EmailChanged(it)) },
             label = "Email",
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon") },
             trailingIcon = {
@@ -69,7 +69,7 @@ fun RegisterScreen(authState: AuthState, authViewModel: AuthViewModel) {
         PrimaryOutlinedTextField(
             value = authState.user.password,
             onValueChange = {
-                authViewModel.onEvent(AuthIntent.PasswordChanged(it))
+                authViewModel.onIntent(AuthIntent.PasswordChanged(it))
             },
             label = "Password",
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password Icon") },

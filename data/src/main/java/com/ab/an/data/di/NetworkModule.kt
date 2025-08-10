@@ -1,8 +1,12 @@
 package com.ab.an.data.di
 
+import com.ab.an.data.network.CustomInterceptor
+import com.ab.an.data.network.api.PasswordApiService
 import com.ab.an.data.network.api.UserApiService
+import com.ab.an.data.network.impl.PasswordRepositoryImpl
 import com.ab.an.data.network.impl.UserApiRepositoryImpl
 import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.repository.PasswordRepository
 import com.ab.an.domain.repository.UserApiRepository
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -10,6 +14,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -20,7 +27,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val E_BASE_URL = "http://10.0.2.2:3000/"
+    private const val E_BASE_URL = "http://192.168.1.6:3000/"
+
+    @Provides
+    @Singleton
+    fun provideCoroutineScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.IO + SupervisorJob())
+    }
 
     /**Te
      * Provides a Gson instance for JSON serialization and deserialization.
@@ -52,6 +65,12 @@ object NetworkModule {
         }
     }
 
+    @Provides
+    @Singleton
+    fun provideCustomInterceptor(appDataStoreRepository: AppDataStoreRepository, coroutineScope: CoroutineScope): CustomInterceptor {
+        return CustomInterceptor(appDataStoreRepository, coroutineScope)
+    }
+
     /**
      * Provides an OkHttpClient instance. OkHttpClient is the underlying HTTP client
      * that Retrofit uses to make network requests. Here, we configure it with
@@ -63,10 +82,12 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideOkHttpClient(
-        loggingInterceptor: HttpLoggingInterceptor
+        loggingInterceptor: HttpLoggingInterceptor,
+        customInterceptor: CustomInterceptor
     ): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor) // Add the logging interceptor for debugging
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(customInterceptor)// Add the logging interceptor for debugging
             .connectTimeout(30, TimeUnit.SECONDS) // Sets the maximum time to establish a connection
             .readTimeout(
                 30,
@@ -114,8 +135,18 @@ object NetworkModule {
 
     @Provides
     @Singleton
+    fun providePasswordApiService(retrofit: Retrofit): PasswordApiService {
+        return retrofit.create(PasswordApiService::class.java)
+    }
+    @Provides
+    @Singleton
     fun provideUserApiRepository(userApiService: UserApiService, appDataStore: AppDataStoreRepository): UserApiRepository {
         return UserApiRepositoryImpl(userApiService, appDataStore)
     }
 
+    @Provides
+    @Singleton
+    fun providePasswordRepository(passwordApiService: PasswordApiService): PasswordRepository {
+        return PasswordRepositoryImpl(passwordApiService)
+    }
 }

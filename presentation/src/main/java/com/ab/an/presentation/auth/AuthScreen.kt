@@ -1,7 +1,6 @@
 package com.ab.an.presentation.auth
 
 import android.widget.Toast
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -26,6 +25,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.SecondaryTabRow
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
@@ -75,132 +75,137 @@ fun AuthScreen(
             Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
         }
     }
-
-    Box(
-        modifier = Modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-            .fillMaxSize()
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.secondary
     ) {
-        Column(
+
+        Box(
             modifier = Modifier
+                .windowInsetsPadding(WindowInsets.safeDrawing)
                 .fillMaxSize()
-                .padding(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .weight(1f)
-                .verticalScroll(rememberScrollState()),
-                horizontalAlignment = Alignment.CenterHorizontally,
+                    .fillMaxSize()
+                    .padding(16.dp)
             ) {
-                Image(
-                    painter = painterResource(R.drawable.auth_header_logo),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
-                )
-                OutlinedCard(
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(
-                            vertical = 36.dp
-                        ),
-                    border = BorderStroke(
-                        width = 2.dp,
-                        color = MaterialTheme.colorScheme.primary
-                    ),
-                    colors = CardDefaults.outlinedCardColors(
-                        containerColor = MaterialTheme.colorScheme.secondary
-                    ),
-                    shape = RoundedCornerShape(16.dp)
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    SecondaryTabRow(
-                        selectedTabIndex = pagerState.currentPage,
-                        containerColor = Color.Transparent,
-                        divider = {},
-                        indicator = {
-                            TabRowDefaults.SecondaryIndicator(
-                                Modifier
-                                    .zIndex(-1f)
-                                    .tabIndicatorOffset(pagerState.currentPage)
-                                    .fillMaxSize() // Make the indicator fill the tab space
-                                    .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
-                                    .background(MaterialTheme.colorScheme.primary) // Filled button color
-                            )
-                        },
-                        modifier = Modifier
-                            .padding(12.dp)
-                            .clip(
-                                RoundedCornerShape(8.dp)
-                            )
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.primary,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .padding(4.dp)
-                    ) {
-                        titles.forEachIndexed { index, title ->
-                            val selected = pagerState.currentPage == index
-                            Tab(
-                                modifier = Modifier.clip(RoundedCornerShape(8.dp)),
-                                selected = selected,
-                                onClick = {
-                                    coroutineScope.launch {
-                                        pagerState.animateScrollToPage(index)
-                                        authViewModel.onEvent(AuthIntent.TabSwitched)
-                                    }
-                                },
-                                text = {
-                                    Text(
-                                        text = title,
-                                        fontSize = 16.sp,
-                                        color = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
-                                    )
-                                },
-                                enabled = !state.isLoading
-                            )
-                        }
-                    }
-                    HorizontalPager(
-                        state = pagerState,
+                    Image(
+                        painter = painterResource(R.drawable.auth_header_logo),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
+                    )
+                    OutlinedCard(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(
-                                horizontal = 16.dp
+                                vertical = 36.dp
                             ),
-                        userScrollEnabled = false,
-                    ) { page ->
-                        when (page) {
-                            0 -> RegisterScreen(state, authViewModel)
-                            1 -> LoginScreen(state, authViewModel)
+                        border = BorderStroke(
+                            width = 2.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        colors = CardDefaults.outlinedCardColors(
+                            containerColor = MaterialTheme.colorScheme.secondary
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    ) {
+                        SecondaryTabRow(
+                            selectedTabIndex = pagerState.currentPage,
+                            containerColor = Color.Transparent,
+                            divider = {},
+                            indicator = {
+                                TabRowDefaults.SecondaryIndicator(
+                                    Modifier
+                                        .zIndex(-1f)
+                                        .tabIndicatorOffset(pagerState.currentPage)
+                                        .fillMaxSize() // Make the indicator fill the tab space
+                                        .clip(RoundedCornerShape(8.dp)) // Apply rounded corners
+                                        .background(MaterialTheme.colorScheme.primary) // Filled button color
+                                )
+                            },
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .clip(
+                                    RoundedCornerShape(8.dp)
+                                )
+                                .border(
+                                    width = 1.dp,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .padding(4.dp)
+                        ) {
+                            titles.forEachIndexed { index, title ->
+                                val selected = pagerState.currentPage == index
+                                Tab(
+                                    modifier = Modifier.clip(RoundedCornerShape(8.dp)),
+                                    selected = selected,
+                                    onClick = {
+                                        coroutineScope.launch {
+                                            pagerState.animateScrollToPage(index)
+                                            authViewModel.onIntent(AuthIntent.TabSwitched)
+                                        }
+                                    },
+                                    text = {
+                                        Text(
+                                            text = title,
+                                            fontSize = 16.sp,
+                                            color = if (selected) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.primary
+                                        )
+                                    },
+                                    enabled = !state.isLoading
+                                )
+                            }
+                        }
+                        HorizontalPager(
+                            state = pagerState,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(
+                                    horizontal = 16.dp
+                                ),
+                            userScrollEnabled = false,
+                        ) { page ->
+                            when (page) {
+                                0 -> RegisterScreen(state, authViewModel)
+                                1 -> LoginScreen(state, authViewModel)
+                            }
                         }
                     }
                 }
-            }
-            PrimaryButton(
-                onClick = {
-                    authViewModel.onEvent(AuthIntent.Auth(titles[pagerState.currentPage]))
-                },
-                label = titles[pagerState.currentPage],
-                modifier = Modifier.fillMaxWidth(),
-                labelFontSize = 18.sp,
-                enabled = !state.isLoading
-            )
-        }
-        AnimatedVisibility(
-            visible = state.isLoading,
-        ) {
-            Column (
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.secondary.copy(
-                        alpha = 0.5f
-                    )),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CircularProgressIndicator(
+                PrimaryButton(
+                    onClick = {
+                        authViewModel.onIntent(AuthIntent.Auth(titles[pagerState.currentPage]))
+                    },
+                    label = titles[pagerState.currentPage],
+                    modifier = Modifier.fillMaxWidth(),
+                    labelFontSize = 18.sp,
+                    enabled = !state.isLoading
                 )
+            }
+
+            if (state.isLoading) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            MaterialTheme.colorScheme.secondary.copy(
+                                alpha = 0.5f
+                            )
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
         }
     }

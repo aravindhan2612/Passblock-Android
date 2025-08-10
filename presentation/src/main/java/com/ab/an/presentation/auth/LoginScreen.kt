@@ -36,7 +36,7 @@ fun LoginScreen(authState: AuthState, authViewModel: AuthViewModel) {
         PrimaryOutlinedTextField(
             value = authState.user.email,
             onValueChange = {
-                authViewModel.onEvent(AuthIntent.EmailChanged(it))
+                authViewModel.onIntent(AuthIntent.EmailChanged(it))
             },
             label = "Email",
             leadingIcon = { Icon(Icons.Default.Email, contentDescription = "Email Icon") },
@@ -54,7 +54,7 @@ fun LoginScreen(authState: AuthState, authViewModel: AuthViewModel) {
         PrimaryOutlinedTextField(
             value = authState.user.password,
             onValueChange = {
-                authViewModel.onEvent(AuthIntent.PasswordChanged(it))
+                authViewModel.onIntent(AuthIntent.PasswordChanged(it))
             },
             label = "Password",
             leadingIcon = { Icon(Icons.Default.Lock, contentDescription = "Password Icon") },

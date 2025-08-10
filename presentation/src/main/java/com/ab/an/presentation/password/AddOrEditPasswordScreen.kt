@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.R
+import com.ab.an.presentation.components.DynamicSelectTextField
 import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryOutlinedTextField
 
@@ -38,7 +41,7 @@ import com.ab.an.presentation.components.PrimaryOutlinedTextField
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun AddOrEditPasswordScreen(
-    isEditMode: Boolean ,
+    isEditMode: Boolean,
     navToHome: () -> Unit,
     addOrEditPasswordViewModel: AddOrEditPasswordViewModel = hiltViewModel()
 ) {
@@ -50,6 +53,12 @@ fun AddOrEditPasswordScreen(
             navToHome()
         }
     }
+    LaunchedEffect(state.errorMessage) {
+        if (!state.errorMessage.isNullOrBlank()) {
+            Toast.makeText(context, state.errorMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
@@ -57,7 +66,7 @@ fun AddOrEditPasswordScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    Text(text = if (isEditMode) "Edit Password" else "New Password")
+                    Text(text = if (isEditMode) "Edit record" else "New record")
                 },
                 navigationIcon = {
                     IconButton(
@@ -77,13 +86,19 @@ fun AddOrEditPasswordScreen(
         }
     ) { innerPadding ->
         Box(
-            modifier = Modifier.padding(innerPadding).fillMaxSize()
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
         ) {
             Column(
                 modifier = Modifier.fillMaxSize()
             ) {
                 Column(
-                    modifier = Modifier.padding(20.dp).fillMaxWidth().weight(1f)
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
                 ) {
                     PrimaryOutlinedTextField(
                         value = state.passwordEntity.name,
@@ -100,7 +115,7 @@ fun AddOrEditPasswordScreen(
                         enabled = !state.isLoading
                     )
                     PrimaryOutlinedTextField(
-                        value = state.passwordEntity.userName,
+                        value = state.passwordEntity.username,
                         onValueChange = {
                             addOrEditPasswordViewModel.onIntent(
                                 AddOrEditPasswordIntent.UserNameChanged(
@@ -141,14 +156,30 @@ fun AddOrEditPasswordScreen(
                         errorMessage = state.passwordError,
                         enabled = !state.isLoading
                     )
+
+                    DynamicSelectTextField(
+                        selectedValue = state.passwordEntity.tag,
+                        options = tags,
+                        label = "Tag",
+                        onValueChangeEvent = {
+                            addOrEditPasswordViewModel.onIntent(
+                                AddOrEditPasswordIntent.TagChanged(
+                                    it
+                                )
+                            )
+                        },
+                        enabled = !state.isLoading
+                    )
                 }
 
                 PrimaryButton(
                     onClick = {
                         addOrEditPasswordViewModel.onIntent(AddOrEditPasswordIntent.Submit)
                     },
-                    label = "Submit",
-                    modifier = Modifier.padding(20.dp).fillMaxWidth(),
+                    label = if(isEditMode) "Edit" else "Add",
+                    modifier = Modifier
+                        .padding(20.dp)
+                        .fillMaxWidth(),
                     enabled = !state.isLoading
                 )
 
@@ -165,8 +196,7 @@ fun AddOrEditPasswordScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
-                    CircularProgressIndicator(
-                    )
+                    CircularProgressIndicator()
                 }
             }
         }

@@ -23,6 +23,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -31,16 +32,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.utils.Constants
-import com.ab.an.presentation.components.PrimaryBoldText
 import com.ab.an.presentation.components.PrimaryButton
-import com.ab.an.presentation.components.PrimaryNormalText
 import com.ab.an.presentation.components.PrimaryOutlinedButton
+import com.ab.an.presentation.components.PrimaryText
 import kotlinx.coroutines.delay
 
 @Composable
@@ -66,67 +67,72 @@ fun OnboardingScreen(
             navToAuth(onBoardState.isRegister)
         }
     }
-    Column(
-        modifier = Modifier
-            .windowInsetsPadding(WindowInsets.safeDrawing)
-            .fillMaxSize()
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.secondary
     ) {
-        Row(
-            Modifier
-                .wrapContentHeight()
-                .fillMaxWidth()
-                .padding(bottom = 8.dp),
-        ) {
-            repeat(pagerState.pageCount) { iteration ->
-                val color =
-                    if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
-                Box(
-                    modifier = Modifier
-                        .padding(20.dp)
-                        .weight(0.5f)
-                        .height(10.dp)
-                        .clip(RoundedCornerShape(5.dp))
-                        .border(
-                            width = 1.dp,
-                            color = MaterialTheme.colorScheme.primary,
-                            shape = RoundedCornerShape(5.dp)
-                        )
-                        .background(color)
-                )
-            }
-        }
-        HorizontalPager(
-            state = pagerState,
-            modifier = Modifier
-                .weight(1f)
-                .fillMaxWidth(),
-        ) { page ->
-            OnBoardItem(onboardViewModel.onBoardDetails[page])
-        }
-
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .fillMaxSize()
         ) {
-            PrimaryButton(
-                onClick = {
-                    onboardViewModel.setOnBoardShown(true)
-                },
-                label = Constants.REGISTER,
-                modifier = Modifier.fillMaxWidth(),
-                labelFontSize = 20.sp
-            )
-            PrimaryOutlinedButton(
-                onClick = {
-                    onboardViewModel.setOnBoardShown(false)
-                },
-                modifier = Modifier.fillMaxWidth(),
-                label = Constants.ALREADY_HAVE_ACCOUNT,
-                labelFontSize = 18.sp
-            )
+            Row(
+                Modifier
+                    .wrapContentHeight()
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp),
+            ) {
+                repeat(pagerState.pageCount) { iteration ->
+                    val color =
+                        if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                    Box(
+                        modifier = Modifier
+                            .padding(20.dp)
+                            .weight(0.5f)
+                            .height(10.dp)
+                            .clip(RoundedCornerShape(5.dp))
+                            .border(
+                                width = 1.dp,
+                                color = MaterialTheme.colorScheme.primary,
+                                shape = RoundedCornerShape(5.dp)
+                            )
+                            .background(color)
+                    )
+                }
+            }
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth(),
+            ) { page ->
+                OnBoardItem(onboardViewModel.onBoardDetails[page])
+            }
+
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentHeight()
+                    .padding(20.dp),
+                verticalArrangement = Arrangement.spacedBy(20.dp)
+            ) {
+                PrimaryButton(
+                    onClick = {
+                        onboardViewModel.setOnBoardShown(true)
+                    },
+                    label = Constants.REGISTER,
+                    modifier = Modifier.fillMaxWidth(),
+                    labelFontSize = 20.sp
+                )
+                PrimaryOutlinedButton(
+                    onClick = {
+                        onboardViewModel.setOnBoardShown(false)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    label = Constants.ALREADY_HAVE_ACCOUNT,
+                    labelFontSize = 18.sp
+                )
+            }
         }
     }
 }
@@ -155,7 +161,7 @@ fun OnBoardItem(onBoardModel: OnBoardDetail) {
             Spacer(
                 modifier = Modifier.height(20.dp)
             )
-            PrimaryNormalText(
+            PrimaryText(
                 text = onBoardModel.headLine,
                 fontSize = 20.sp
             )
@@ -167,14 +173,15 @@ fun OnBoardItem(onBoardModel: OnBoardDetail) {
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            PrimaryBoldText(
+            PrimaryText(
                 text = onBoardModel.title,
-                fontSize = 24.sp
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Bold
             )
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            PrimaryNormalText(
+            PrimaryText(
                 text = onBoardModel.description,
                 fontSize = 16.sp,
             )
@@ -199,12 +206,13 @@ fun OnBoardItem(onBoardModel: OnBoardDetail) {
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            PrimaryBoldText(
+            PrimaryText(
                 text = onBoardModel.title,
                 fontSize = 40.sp,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold
             )
-            PrimaryNormalText(
+            PrimaryText(
                 text = onBoardModel.description,
                 fontSize = 20.sp,
                 textAlign = TextAlign.Center

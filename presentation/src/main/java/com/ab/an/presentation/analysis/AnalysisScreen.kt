@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.ab.an.presentation.components.PrimaryNormalText
+import com.ab.an.presentation.components.PrimaryText
 
 
 @Composable
@@ -17,7 +17,7 @@ fun AnalysisScreen(innerPadding: PaddingValues) {
             .padding(innerPadding)
             .fillMaxSize()
     ) {
-        PrimaryNormalText(
+        PrimaryText(
             text = "Analysis screen"
         )
     }

@@ -7,37 +7,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.sp
 
 @Composable
-fun PrimaryNormalText(
+fun PrimaryText(
     modifier: Modifier = Modifier,
     text: String,
     fontSize: TextUnit = TextUnit.Unspecified,
-    textAlign: TextAlign = TextAlign.Unspecified
+    textAlign: TextAlign = TextAlign.Unspecified,
+    fontWeight: FontWeight = FontWeight.Normal
     ) {
     Text(
         modifier = modifier,
         text = text,
         fontSize = fontSize,
-        fontWeight = FontWeight.Normal,
-        color = MaterialTheme.colorScheme.primary,
-        textAlign = textAlign
-    )
-}
-
-@Composable
-fun PrimaryBoldText(
-    modifier: Modifier = Modifier,
-    text: String,
-    fontSize: TextUnit = TextUnit.Unspecified,
-    textAlign: TextAlign = TextAlign.Unspecified
-) {
-    Text(
-        modifier = modifier,
-        text = text,
-        fontSize = fontSize,
-        fontWeight = FontWeight.Bold,
+        fontWeight = fontWeight,
         color = MaterialTheme.colorScheme.primary,
         textAlign = textAlign
     )

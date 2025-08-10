@@ -5,7 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Constants
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.model.User
-import com.ab.an.domain.repository.AppDataStoreRepository
 import com.ab.an.domain.usecase.UserLoginUseCase
 import com.ab.an.domain.usecase.UserRegisterUseCase
 import com.ab.an.domain.usecase.ValidateEmailUseCase
@@ -21,7 +20,6 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    private val appDataStoreRepository: AppDataStoreRepository,
     private val loginUseCase: UserLoginUseCase,
     private val registerUseCase: UserRegisterUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
@@ -29,10 +27,15 @@ class AuthViewModel @Inject constructor(
     private val validateUsernameUseCase: ValidateUsernameUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(AuthState())
+    private val _state = MutableStateFlow(AuthState(
+        user = User().copy(
+            email = "Test@gmail.com",
+            password = "Test@123"
+        )
+    ))
     val state = _state.asStateFlow()
 
-    fun onEvent(event: AuthIntent) {
+    fun onIntent(event: AuthIntent) {
         when (event) {
             is AuthIntent.EmailChanged -> {
                 _state.value = _state.value.copy(

@@ -3,17 +3,30 @@ package com.ab.an.presentation.theme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.googlefonts.Font
+import androidx.compose.ui.text.googlefonts.GoogleFont
 import com.ab.an.core.R
 
 // Set of Material typography styles to start with
-
-val poppinsFont = FontFamily(
-    Font(R.font.poppins_regular, FontWeight.Normal),
-    Font(R.font.poppins_semibold, FontWeight.SemiBold),
+val provider = GoogleFont.Provider(
+    providerAuthority = "com.google.android.gms.fonts",
+    providerPackage = "com.google.android.gms",
+    certificates = R.array.com_google_android_gms_fonts_certs
 )
+val poppinsFont =  FontFamily(
+    Font(
+        googleFont = GoogleFont("Poppins"),
+        fontProvider = provider
+    )
+)
+
+
+//    FontFamily(
+//    Font(R.font.poppins_regular, FontWeight.Normal),
+//    Font(R.font.poppins_semibold, FontWeight.SemiBold),
+//)
 
 @Composable
 fun appTypography(): Typography {

@@ -40,7 +40,7 @@ import com.ab.an.presentation.setting.SettingScreen
 fun NestedGraph(
     navToAddOrEditPassword: () -> Unit,
     navToAuth: () -> Unit
-    ) {
+) {
     val backStack = rememberNavBackStack(BottomBarRoute.Home)
     var currentRoute: BottomBarRoute by rememberSaveable(
         stateSaver = BottomBarScreenSaver
@@ -60,24 +60,24 @@ fun NestedGraph(
                     )
                 },
                 navigationIcon = {
-                        IconButton(
-                            onClick = {}
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = null
-                            )
-                        }
+                    IconButton(
+                        onClick = {}
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Person,
+                            contentDescription = null
+                        )
+                    }
                 },
                 actions = {
-                        IconButton(
-                            onClick = navToAddOrEditPassword
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = null
-                            )
-                        }
+                    IconButton(
+                        onClick = navToAddOrEditPassword
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Add,
+                            contentDescription = null
+                        )
+                    }
                 }
             )
         },
@@ -92,8 +92,8 @@ fun NestedGraph(
                     NavigationBarItem(
                         selected = isSelected,
                         onClick = {
-                            if(backStack.lastOrNull() != item.route) {
-                                if(backStack.lastOrNull() in bottomNavigationRoutes.map { it.route }) {
+                            if (backStack.lastOrNull() != item.route) {
+                                if (backStack.lastOrNull() in bottomNavigationRoutes.map { it.route }) {
                                     backStack.removeAt(backStack.lastIndex)
                                 }
                                 backStack.add(item.route)
@@ -118,7 +118,7 @@ fun NestedGraph(
                 }
             }
         }
-    ) {  innerPadding ->
+    ) { innerPadding ->
 
         NavDisplay(
             backStack = backStack,
@@ -128,7 +128,10 @@ fun NestedGraph(
             ),
             entryProvider = entryProvider {
                 entry<BottomBarRoute.Home> {
-                    HomeScreen(innerPadding)
+                    HomeScreen(
+                        innerPadding = innerPadding,
+                        navToAddOrEditPassword = navToAddOrEditPassword
+                    )
                 }
                 entry<BottomBarRoute.Analysis> {
                     AnalysisScreen(innerPadding)

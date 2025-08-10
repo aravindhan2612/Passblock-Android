@@ -14,6 +14,7 @@ import com.ab.an.core.utils.Constants.SECURITY
 import com.ab.an.domain.repository.AppDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -23,7 +24,7 @@ class OnboardViewModel @Inject constructor(private val appDataStoreRepository: A
     ViewModel() {
 
     private val _state = MutableStateFlow(OnBoardState())
-    val state = _state
+    val state = _state.asStateFlow()
 
 
     fun setOnBoardShown( isRegister: Boolean) {

@@ -12,3 +12,17 @@ data class AddOrEditPasswordState(
     val isLoading: Boolean = false,
     val success: Boolean = false,
 )
+
+val tags = listOf(
+"Work",
+"Personal",
+"Entertainment",
+"Shopping",
+"Education",
+"Health",
+"Finance",
+"Productivity",
+"Lifestyle",
+"Priority",
+"Other"
+)
