@@ -1,9 +1,9 @@
 package com.ab.an.presentation.password
 
-import com.ab.an.domain.model.PasswordEntity
+import com.ab.an.domain.model.Password
 
 data class AddOrEditPasswordState(
-    val passwordEntity: PasswordEntity = PasswordEntity(),
+    val passwordEntity: Password = Password(),
     val nameError: String = "",
     val userNameError: String = "",
     val linkError: String = "",

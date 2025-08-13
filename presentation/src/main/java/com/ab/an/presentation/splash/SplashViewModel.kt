@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ab.an.domain.repository.AppDataStoreRepository
 import com.ab.an.presentation.navigation.RootRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.firstOrNull
@@ -29,6 +30,7 @@ class SplashViewModel @Inject constructor(private val appDataStoreRepository: Ap
     private suspend fun loadData() {
         val isOnboardingShown = appDataStoreRepository.getOnBoardShown().firstOrNull()
         val isUserLoggedIn = appDataStoreRepository.isUserLoggedIn().firstOrNull()
+        delay(3000L)
         when {
             isUserLoggedIn == true -> {
                 _state.update {

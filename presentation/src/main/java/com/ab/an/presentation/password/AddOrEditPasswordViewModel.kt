@@ -3,7 +3,7 @@ package com.ab.an.presentation.password
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
-import com.ab.an.domain.model.PasswordEntity
+import com.ab.an.domain.model.Password
 import com.ab.an.domain.usecase.AddPasswordUseCase
 import com.ab.an.domain.usecase.ValidateLinkUseCase
 import com.ab.an.domain.usecase.ValidateNameUseCase
@@ -21,7 +21,7 @@ class AddOrEditPasswordViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AddOrEditPasswordState(
-        passwordEntity = PasswordEntity(
+        passwordEntity = Password(
             tag = tags.last()
         )
     ))
@@ -102,20 +102,20 @@ class AddOrEditPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             addPasswordUseCase(_state.value.passwordEntity).collect { result ->
                 when(result) {
-                    is Resource.Error<PasswordEntity> -> {
+                    is Resource.Error<Password> -> {
                         _state.value = _state.value.copy(
                             isLoading = false,
                             errorMessage = result.message
                         )
                     }
-                    is Resource.Loading<PasswordEntity> -> {
+                    is Resource.Loading<Password> -> {
                         _state.value = _state.value.copy(
                             isLoading = true,
                             errorMessage = null,
                             success = false
                         )
                     }
-                    is Resource.Success<PasswordEntity> -> {
+                    is Resource.Success<Password> -> {
                         _state.value = _state.value.copy(
                             isLoading = false,
                             success = true

@@ -1,7 +1,9 @@
 package com.ab.an.presentation.home
 
-sealed class SectionListItem() {
-    data class Header(val title: String) : SectionListItem()
-    data class Item(val name: String, val username: String, val password: String, val faviconUrl: String) :
-        SectionListItem()
+import com.ab.an.domain.model.Password
+
+sealed class PasswordSectionListItem() {
+    data class Header(val title: String) : PasswordSectionListItem()
+    data class Item(val password: Password) :
+        PasswordSectionListItem()
 }

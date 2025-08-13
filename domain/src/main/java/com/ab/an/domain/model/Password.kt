@@ -1,6 +1,6 @@
 package com.ab.an.domain.model
 
-data class PasswordEntity(
+data class Password(
     val id: String = "",
     val name: String = "",
     val username: String = "",

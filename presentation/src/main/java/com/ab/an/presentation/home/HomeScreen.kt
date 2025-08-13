@@ -1,6 +1,7 @@
 package com.ab.an.presentation.home
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -10,11 +11,15 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -39,9 +44,12 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil3.compose.AsyncImage
+import coil3.compose.SubcomposeAsyncImage
+import coil3.compose.rememberAsyncImagePainter
 import com.ab.an.core.R
 import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryText
+import androidx.compose.runtime.collectAsState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -104,11 +112,11 @@ fun HomeScreen(
             ) {
                 items(state.passwords) { sectionListItem ->
                     when (sectionListItem) {
-                        is SectionListItem.Header -> {
+                        is PasswordSectionListItem.Header -> {
                             SectionHeader(title = sectionListItem.title)
                         }
 
-                        is SectionListItem.Item -> {
+                        is PasswordSectionListItem.Item -> {
                             ListItem(
                                 item = sectionListItem
                             )
@@ -130,17 +138,18 @@ fun SectionHeader(title: String) {
 }
 
 @Composable
-fun ListItem(item: SectionListItem.Item) {
+fun ListItem(item: PasswordSectionListItem.Item) {
     val context = LocalContext.current
+    val painter = rememberAsyncImagePainter(item.password.faviconUrl)
+    val painterValue by painter.state.collectAsStateWithLifecycle()
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(12.dp)
     ) {
-        AsyncImage(
-            model = item.faviconUrl,
-            placeholder = painterResource(R.drawable.baseline_image_24),
-            contentDescription = "",
+        Image(
+            painter = if(painterValue.painter != null) painter else painterResource(R.drawable.outline_broken_image_24),
+            contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(50.dp)
@@ -151,20 +160,22 @@ fun ListItem(item: SectionListItem.Item) {
                 .padding(horizontal = 20.dp)
                 .weight(1f)
         ) {
-            PrimaryText(text = item.name, fontWeight = FontWeight.Medium, fontSize = 18.sp)
+            PrimaryText(text = item.password.name, fontWeight = FontWeight.Medium, fontSize = 18.sp)
             Text(
-                text = item.username,
+                text = item.password.username,
                 fontSize = 14.sp,
                 color = MaterialTheme.colorScheme.onPrimary
             )
         }
         IconButton(
             colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.primary
+                contentColor = MaterialTheme.colorScheme.secondary,
+                containerColor = MaterialTheme.colorScheme.primary
             ),
             onClick = {
-                Toast.makeText(context, "Copied ${item.username}", Toast.LENGTH_SHORT).show()
-            }
+                Toast.makeText(context, "Copied ${item.password.username}", Toast.LENGTH_SHORT).show()
+            },
+            modifier = Modifier.size(50.dp)
         ) {
             Icon(
                 imageVector = Icons.Filled.ContentCopy,

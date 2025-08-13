@@ -1,10 +1,10 @@
 package com.ab.an.data.mapper
 
 import com.ab.an.data.network.dto.PasswordDto
-import com.ab.an.domain.model.PasswordEntity
+import com.ab.an.domain.model.Password
 
-fun PasswordDto.toPasswordEntity(): PasswordEntity {
-    return PasswordEntity(
+fun PasswordDto.toPasswordEntity(): Password {
+    return Password(
         id = id ?: "",
         name = name ?: "",
         username = usernameOrUserId ?: "",
@@ -16,7 +16,7 @@ fun PasswordDto.toPasswordEntity(): PasswordEntity {
 
 }
 
-fun PasswordEntity.toPasswordDto(): PasswordDto {
+fun Password.toPasswordDto(): PasswordDto {
     return PasswordDto(
         id = id,
         name = name,

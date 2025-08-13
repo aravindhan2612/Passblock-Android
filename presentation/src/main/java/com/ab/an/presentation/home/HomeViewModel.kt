@@ -47,20 +47,13 @@ class HomeViewModel @Inject constructor(
 
                     is Resource.Success -> {
                         val passwordEntities = result.data
-                        val sectionListItems = mutableListOf<SectionListItem>()
+                        val sectionListItems = mutableListOf<PasswordSectionListItem>()
                         passwordEntities?.groupBy { passwordEntity ->
                             passwordEntity.tag
                         }?.forEach { (tag, passwords) ->
-                            sectionListItems.add(SectionListItem.Header(tag))
+                            sectionListItems.add(PasswordSectionListItem.Header(tag))
                             passwords.forEach { password ->
-                                sectionListItems.add(
-                                    SectionListItem.Item(
-                                        name = password.name,
-                                        username = password.username,
-                                        password = password.password,
-                                        faviconUrl = password.faviconUrl
-                                    )
-                                )
+                                sectionListItems.add(PasswordSectionListItem.Item(password))
                             }
                         }
                         _state.value = _state.value.copy(
