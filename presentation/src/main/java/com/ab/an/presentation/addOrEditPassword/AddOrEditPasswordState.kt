@@ -1,4 +1,4 @@
-package com.ab.an.presentation.password
+package com.ab.an.presentation.addOrEditPassword
 
 import com.ab.an.domain.model.Password
 
@@ -11,6 +11,7 @@ data class AddOrEditPasswordState(
     val errorMessage: String? = null,
     val isLoading: Boolean = false,
     val success: Boolean = false,
+    val fetchPasswordError: String? = null
 )
 
 val tags = listOf(

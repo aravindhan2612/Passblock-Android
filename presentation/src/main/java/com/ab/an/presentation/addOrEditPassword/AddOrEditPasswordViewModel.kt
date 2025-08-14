@@ -1,10 +1,11 @@
-package com.ab.an.presentation.password
+package com.ab.an.presentation.addOrEditPassword
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.model.Password
-import com.ab.an.domain.usecase.AddPasswordUseCase
+import com.ab.an.domain.usecase.AddOrEditPasswordUseCase
+import com.ab.an.domain.usecase.GetPasswordUseCase
 import com.ab.an.domain.usecase.ValidateLinkUseCase
 import com.ab.an.domain.usecase.ValidateNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class AddOrEditPasswordViewModel @Inject constructor(
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateLinkUseCase: ValidateLinkUseCase,
-    private val addPasswordUseCase: AddPasswordUseCase,
+    private val addPasswordUseCase: AddOrEditPasswordUseCase,
+    private val getPasswordUseCase: GetPasswordUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AddOrEditPasswordState(
@@ -56,8 +58,8 @@ class AddOrEditPasswordViewModel @Inject constructor(
                 )
             }
 
-            AddOrEditPasswordIntent.Submit -> {
-                submit()
+            is AddOrEditPasswordIntent.Submit -> {
+                submit(intent.isEdit)
             }
 
             is AddOrEditPasswordIntent.UserNameChanged -> {
@@ -76,10 +78,12 @@ class AddOrEditPasswordViewModel @Inject constructor(
                     )
                 )
             }
+
+            is AddOrEditPasswordIntent.FetchPassword -> fetchPassword(intent.id)
         }
     }
 
-    private fun submit() {
+    private fun submit(isEditMode: Boolean) {
         val nameError = validateNameUseCase(_state.value.passwordEntity.name, "Name")
         val userNameError = validateNameUseCase(_state.value.passwordEntity.username, "User Name")
         val linkError = validateLinkUseCase(_state.value.passwordEntity.link)
@@ -100,7 +104,7 @@ class AddOrEditPasswordViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            addPasswordUseCase(_state.value.passwordEntity).collect { result ->
+            addPasswordUseCase(isEdit = isEditMode,_state.value.passwordEntity).collect { result ->
                 when(result) {
                     is Resource.Error<Password> -> {
                         _state.value = _state.value.copy(
@@ -120,6 +124,38 @@ class AddOrEditPasswordViewModel @Inject constructor(
                             isLoading = false,
                             success = true
                         )
+                    }
+                }
+            }
+        }
+    }
+
+    private fun fetchPassword(id: String) {
+        viewModelScope.launch {
+            getPasswordUseCase(id).collect { result ->
+                when (result) {
+                    is Resource.Error -> {
+                        _state.value = _state.value.copy(
+                            isLoading = false,
+                            fetchPasswordError = result.message
+                        )
+                    }
+
+                    is Resource.Loading -> {
+                        _state.value = _state.value.copy(
+                            isLoading = true,
+                            fetchPasswordError = null
+                        )
+                    }
+
+                    is Resource.Success -> {
+                        result.data?.let {
+                            _state.value = _state.value.copy(
+                                passwordEntity = it,
+                                isLoading = false,
+                                fetchPasswordError = null
+                            )
+                        }
                     }
                 }
             }

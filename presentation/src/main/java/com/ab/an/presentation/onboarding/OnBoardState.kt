@@ -3,7 +3,7 @@ package com.ab.an.presentation.onboarding
 
 data class OnBoardState(
     val isComplete: Boolean = false,
-    val isRegister: Boolean = false
+    val isRegister: Boolean = false,
 )
 data class OnBoardDetail(
     val imageRes: Int,

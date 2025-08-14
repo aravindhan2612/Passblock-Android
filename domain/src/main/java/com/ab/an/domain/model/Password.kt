@@ -1,5 +1,6 @@
 package com.ab.an.domain.model
 
+
 data class Password(
     val id: String = "",
     val name: String = "",

@@ -1,4 +1,4 @@
-package com.ab.an.presentation.password
+package com.ab.an.presentation.addOrEditPassword
 
 import android.annotation.SuppressLint
 import android.widget.Toast
@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -21,6 +22,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -43,13 +45,20 @@ import com.ab.an.presentation.components.PrimaryOutlinedTextField
 fun AddOrEditPasswordScreen(
     isEditMode: Boolean,
     navToHome: () -> Unit,
-    addOrEditPasswordViewModel: AddOrEditPasswordViewModel = hiltViewModel()
+    addOrEditPasswordViewModel: AddOrEditPasswordViewModel = hiltViewModel(),
+    id: String? = null
 ) {
     val state by addOrEditPasswordViewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        if (!id.isNullOrBlank()) {
+            addOrEditPasswordViewModel.onIntent(AddOrEditPasswordIntent.FetchPassword(id))
+        }
+    }
     LaunchedEffect(state.success) {
         if (state.success) {
-            Toast.makeText(context, "Password added successfully", Toast.LENGTH_SHORT).show()
+            val msg = if(isEditMode) "Password updated successfully" else "Password added successfully"
+            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
             navToHome()
         }
     }
@@ -174,15 +183,36 @@ fun AddOrEditPasswordScreen(
 
                 PrimaryButton(
                     onClick = {
-                        addOrEditPasswordViewModel.onIntent(AddOrEditPasswordIntent.Submit)
+                        addOrEditPasswordViewModel.onIntent(
+                            AddOrEditPasswordIntent.Submit(
+                                isEditMode
+                            )
+                        )
                     },
-                    label = if(isEditMode) "Edit" else "Add",
+                    label = if (isEditMode) "Edit" else "Add",
                     modifier = Modifier
                         .padding(20.dp)
                         .fillMaxWidth(),
                     enabled = !state.isLoading
                 )
 
+            }
+            if (!state.fetchPasswordError.isNullOrBlank()) {
+                AlertDialog(
+                    onDismissRequest = {
+
+                    },
+                    text = {
+                        state.fetchPasswordError?.let { Text(text = it) }
+                    },
+                    confirmButton = {
+                        TextButton(
+                            onClick = navToHome
+                        ) {
+                            Text(text = "Close")
+                        }
+                    }
+                )
             }
             if (state.isLoading) {
                 Column(

@@ -9,10 +9,11 @@ import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import com.ab.an.presentation.addOrEditPassword.AddOrEditPasswordScreen
 import com.ab.an.presentation.auth.AuthScreen
 import com.ab.an.presentation.onboarding.OnboardingScreen
-import com.ab.an.presentation.password.AddOrEditPasswordScreen
 import com.ab.an.presentation.splash.SplashScreen
+import com.ab.an.presentation.viewPassword.ViewPasswordScreen
 
 
 @Composable
@@ -51,26 +52,35 @@ fun RootGraph(
                     isRegister = it.isRegister,
                     onComplete = {
                         backStack.removeLastOrNull()
-                        backStack.add(RootRoute.NestedGraph)
+                        backStack.add(RootRoute.BottomBarGraph)
                     }
                 )
             }
-            entry<RootRoute.NestedGraph>{
-                NestedGraph(
-                    navToAddOrEditPassword = {
-                    backStack.add(RootRoute.AddOrEditPassword(false))
-                },
-                    navToAuth = {
-                        backStack.removeLastOrNull()
-                        backStack.add(RootRoute.Auth(false))
-                    }
-                    )
+            entry<RootRoute.BottomBarGraph> {
+                BottomBarGraph(
+                    rootBackStack = backStack,
+                )
             }
 
             entry<RootRoute.AddOrEditPassword> {
-                AddOrEditPasswordScreen(it.isEditMode,navToHome = {
-                    backStack.removeLastOrNull()
-                })
+                AddOrEditPasswordScreen(
+                    it.isEditMode,
+                    navToHome = {
+                        backStack.removeLastOrNull()
+                    },
+                    id = it.id
+                )
+            }
+            entry<RootRoute.ViewPassword> {
+                ViewPasswordScreen(
+                    id = it.id,
+                    navToHome = {
+                        backStack.removeLastOrNull()
+                    },
+                    navToAddOrEditPassword = {
+                        backStack.add(RootRoute.AddOrEditPassword(true, it.id))
+                    }
+                )
             }
         }
     )

@@ -188,7 +188,8 @@ fun AuthScreen(
                     label = titles[pagerState.currentPage],
                     modifier = Modifier.fillMaxWidth(),
                     labelFontSize = 18.sp,
-                    enabled = !state.isLoading
+                    enabled = !state.isLoading,
+                    isLoading = state.isLoading
                 )
             }
 

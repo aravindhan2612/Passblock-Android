@@ -13,6 +13,7 @@ import com.ab.an.core.utils.Constants.PASS_BLOCK
 import com.ab.an.core.utils.Constants.SECURITY
 import com.ab.an.domain.repository.AppDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -27,15 +28,15 @@ class OnboardViewModel @Inject constructor(private val appDataStoreRepository: A
     val state = _state.asStateFlow()
 
 
-    fun setOnBoardShown( isRegister: Boolean) {
-        val job = viewModelScope.launch {
-            appDataStoreRepository.setOnBoardShown(true)
-        }
-        job.invokeOnCompletion {
+    fun setOnBoardShown(isRegister: Boolean) {
+        viewModelScope.launch {
+            async {
+                appDataStoreRepository.setOnBoardShown(true)
+            }.await()
             _state.update {
                 it.copy(
                     isComplete = true,
-                    isRegister = isRegister
+                    isRegister = isRegister,
                 )
             }
         }

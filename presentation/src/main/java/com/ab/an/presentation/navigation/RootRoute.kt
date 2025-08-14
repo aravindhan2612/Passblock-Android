@@ -12,10 +12,11 @@ sealed class RootRoute() : NavKey {
     @Serializable
     data class Auth(val isRegister: Boolean = false) : RootRoute()
     @Serializable
-    data class AddOrEditPassword(val isEditMode: Boolean = false) : RootRoute()
-
+    data object BottomBarGraph : RootRoute()
     @Serializable
-    data object NestedGraph : RootRoute()
+    data class AddOrEditPassword(val isEditMode: Boolean = false, val id: String? = null) : RootRoute()
+    @Serializable
+    data class ViewPassword(val id: String) : RootRoute()
 
 }
 

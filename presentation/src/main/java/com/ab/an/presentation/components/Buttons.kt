@@ -19,7 +19,8 @@ fun PrimaryButton(
     onClick: () -> Unit,
     label: String,
     labelFontSize: TextUnit = TextUnit.Unspecified,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    isLoading: Boolean = false
 ) {
     Button(
         onClick = onClick,
@@ -45,7 +46,8 @@ fun PrimaryOutlinedButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
     label: String,
-    labelFontSize: TextUnit = TextUnit.Unspecified
+    labelFontSize: TextUnit = TextUnit.Unspecified,
+    isLoading: Boolean = false
 ) {
     OutlinedButton(
         modifier = modifier,

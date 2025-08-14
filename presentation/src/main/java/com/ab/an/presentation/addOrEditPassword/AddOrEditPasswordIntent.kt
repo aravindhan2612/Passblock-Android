@@ -1,4 +1,4 @@
-package com.ab.an.presentation.password
+package com.ab.an.presentation.addOrEditPassword
 
 sealed class AddOrEditPasswordIntent {
     data class NameChanged(val name: String) : AddOrEditPasswordIntent()
@@ -6,6 +6,6 @@ sealed class AddOrEditPasswordIntent {
     data class LinkChanged(val link: String) : AddOrEditPasswordIntent()
     data class PasswordChanged(val password: String) : AddOrEditPasswordIntent()
     data class TagChanged(val tag: String) : AddOrEditPasswordIntent()
-
-    object Submit : AddOrEditPasswordIntent()
+    data class Submit(val isEdit: Boolean) : AddOrEditPasswordIntent()
+    data class  FetchPassword(val id: String): AddOrEditPasswordIntent()
 }

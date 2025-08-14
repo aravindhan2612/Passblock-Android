@@ -1,4 +1,4 @@
-package com.ab.an.presentation.analysis
+package com.ab.an.presentation.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -10,7 +10,7 @@ import com.ab.an.presentation.components.PrimaryText
 
 
 @Composable
-fun AnalysisScreen(innerPadding: PaddingValues) {
+fun ProfileScreen(innerPadding: PaddingValues) {
 
     Column(
         modifier = Modifier
@@ -18,7 +18,7 @@ fun AnalysisScreen(innerPadding: PaddingValues) {
             .fillMaxSize()
     ) {
         PrimaryText(
-            text = "Analysis screen"
+            text = "Profile screen"
         )
     }
 }

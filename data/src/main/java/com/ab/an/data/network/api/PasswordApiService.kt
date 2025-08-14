@@ -15,6 +15,9 @@ interface PasswordApiService {
     @Headers("X-Require-Token: true")
     @GET("api/passwords")
     suspend fun getPasswords(): Response<List<PasswordDto>>
+    @Headers("X-Require-Token: true")
+    @GET("api/passwords/{id}")
+    suspend fun getPassword(@Path("id") id: String): Response<PasswordDto>
 
     @Headers("X-Require-Token: true")
     @POST("api/passwords/add")

@@ -6,6 +6,7 @@ object Constants {
     const val LOGIN = "Login"
     const val ALREADY_HAVE_ACCOUNT = "Already have an account"
     const val SECURITY = "Security"
+    const val PROFILE = "Profile"
     const val CONTROL_YOUR_SECURITY = "Control your security"
     const val OB_DESCRIPTION_1 =
         "This application is build on blockchain so that you can get 100% security across websites & applications with single app."

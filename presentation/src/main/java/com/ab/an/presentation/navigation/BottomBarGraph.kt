@@ -1,5 +1,6 @@
 package com.ab.an.presentation.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Person
@@ -22,32 +23,37 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.NavBackStack
 import androidx.navigation3.runtime.entry
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberNavBackStack
 import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.ab.an.presentation.analysis.AnalysisScreen
 import com.ab.an.presentation.home.HomeScreen
+import com.ab.an.presentation.profile.ProfileScreen
 import com.ab.an.presentation.search.SearchScreen
 import com.ab.an.presentation.setting.SettingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NestedGraph(
-    navToAddOrEditPassword: () -> Unit,
-    navToAuth: () -> Unit
+fun BottomBarGraph(
+    rootBackStack: NavBackStack,
 ) {
     val backStack = rememberNavBackStack(BottomBarRoute.Home)
     var currentRoute: BottomBarRoute by rememberSaveable(
         stateSaver = BottomBarScreenSaver
     ) { mutableStateOf(BottomBarRoute.Home) }
     Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        containerColor = MaterialTheme.colorScheme.secondary,
+        modifier = Modifier
+            .fillMaxSize()
+            .background(
+                brush = Brush.verticalGradient(
+                    colors = listOf(Color.Blue, Color.Cyan)
+                )
+            ),
         topBar = {
             CenterAlignedTopAppBar(
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -71,7 +77,9 @@ fun NestedGraph(
                 },
                 actions = {
                     IconButton(
-                        onClick = navToAddOrEditPassword
+                        onClick = {
+                            rootBackStack.add(RootRoute.AddOrEditPassword(false))
+                        }
                     ) {
                         Icon(
                             imageVector = Icons.Outlined.Add,
@@ -124,23 +132,31 @@ fun NestedGraph(
             backStack = backStack,
             entryDecorators = listOf(
                 rememberSavedStateNavEntryDecorator(),
-                rememberViewModelStoreNavEntryDecorator()
+//                rememberViewModelStoreNavEntryDecorator()
             ),
             entryProvider = entryProvider {
                 entry<BottomBarRoute.Home> {
                     HomeScreen(
                         innerPadding = innerPadding,
-                        navToAddOrEditPassword = navToAddOrEditPassword
+                        navToAddOrEditPassword = {
+                            rootBackStack.add(RootRoute.AddOrEditPassword(false))
+                        },
+                        navToViewPassword = { id ->
+                            rootBackStack.add(RootRoute.ViewPassword(id = id))
+                        }
                     )
                 }
-                entry<BottomBarRoute.Analysis> {
-                    AnalysisScreen(innerPadding)
+                entry<BottomBarRoute.Profile> {
+                    ProfileScreen(innerPadding)
                 }
                 entry<BottomBarRoute.Search> {
                     SearchScreen(innerPadding)
                 }
                 entry<BottomBarRoute.Setting> {
-                    SettingScreen(innerPadding, navToAuth = navToAuth)
+                    SettingScreen(innerPadding, navToAuth = {
+                        rootBackStack.removeLastOrNull()
+                        rootBackStack.add(RootRoute.Auth(false))
+                    })
                 }
             }
         )

@@ -25,3 +25,21 @@ fun PrimaryText(
         textAlign = textAlign
     )
 }
+
+@Composable
+fun OnPrimaryText(
+    modifier: Modifier = Modifier,
+    text: String,
+    fontSize: TextUnit = TextUnit.Unspecified,
+    textAlign: TextAlign = TextAlign.Unspecified,
+    fontWeight: FontWeight = FontWeight.Normal
+) {
+    Text(
+        modifier = modifier,
+        text = text,
+        fontSize = fontSize,
+        fontWeight = fontWeight,
+        color = MaterialTheme.colorScheme.onPrimary,
+        textAlign = textAlign
+    )
+}

@@ -22,6 +22,16 @@ class PasswordRepositoryImpl @Inject constructor(private val apiService: Passwor
         }
     }
 
+    override fun getPassword(id: String): Flow<Resource<Password>> = flow {
+        getResult { apiService.getPassword(id) }.collect { resource ->
+            when(resource) {
+                is Resource.Error -> emit(Resource.Error(resource.message))
+                is Resource.Loading -> emit(Resource.Loading())
+                is Resource.Success -> emit(Resource.Success(resource.data?.toPasswordEntity()))
+            }
+        }
+    }
+
     override fun addPassword(password: Password): Flow<Resource<Password>> = flow {
         getResult { apiService.addPassword(password.toPasswordDto()) }.collect { resource ->
             when (resource) {

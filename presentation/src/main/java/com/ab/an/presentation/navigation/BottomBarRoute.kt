@@ -1,13 +1,13 @@
 package com.ab.an.presentation.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Analytics
 import androidx.compose.material.icons.filled.FindInPage
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.Analytics
 import androidx.compose.material.icons.outlined.FindInPage
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.PersonOutline
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -22,8 +22,8 @@ sealed class BottomBarRoute(val title: String): NavKey {
         title = Constants.PASSWORDS,
     )
     @Serializable
-    data object Analysis: BottomBarRoute(
-        title = Constants.SECURITY,
+    data object Profile: BottomBarRoute(
+        title = Constants.PROFILE,
     )
     @Serializable
     data object Search: BottomBarRoute(
@@ -50,13 +50,6 @@ val bottomNavigationRoutes = listOf(
         filledIcon = Icons.Filled.Home
     ),
     NavigationBarItemDetail(
-        BottomBarRoute.Analysis,
-
-        "Analysis",
-        outlineIcon = Icons.Outlined.Analytics,
-        filledIcon = Icons.Filled.Analytics
-    ),
-    NavigationBarItemDetail(
         BottomBarRoute.Search,
         "Search",
         outlineIcon = Icons.Outlined.FindInPage,
@@ -68,6 +61,13 @@ val bottomNavigationRoutes = listOf(
         outlineIcon = Icons.Outlined.Settings,
         filledIcon = Icons.Filled.Settings
     ),
+    NavigationBarItemDetail(
+        BottomBarRoute.Profile,
+
+        "Profile",
+        outlineIcon = Icons.Outlined.PersonOutline,
+        filledIcon = Icons.Filled.Person
+    ),
 )
 
 val BottomBarScreenSaver = Saver<BottomBarRoute, String>(
@@ -75,9 +75,9 @@ val BottomBarScreenSaver = Saver<BottomBarRoute, String>(
     restore = {
         when (it) {
             BottomBarRoute.Home::class.simpleName -> BottomBarRoute.Home
-            BottomBarRoute.Analysis::class.simpleName -> BottomBarRoute.Analysis
             BottomBarRoute.Search::class.simpleName -> BottomBarRoute.Search
             BottomBarRoute.Setting::class.simpleName -> BottomBarRoute.Setting
+            BottomBarRoute.Profile::class.simpleName -> BottomBarRoute.Profile
             else -> BottomBarRoute.Home
 
         }
