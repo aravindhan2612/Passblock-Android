@@ -9,4 +9,6 @@ interface UserApiRepository {
     fun register(user: User): Flow<Resource<User>>
 
     fun login(user: User): Flow<Resource<User>>
+
+    fun getCurrentUser(): Flow<Resource<User>>
 }

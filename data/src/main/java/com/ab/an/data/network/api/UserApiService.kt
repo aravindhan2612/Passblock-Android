@@ -4,6 +4,8 @@ import com.ab.an.data.network.dto.AuthResponseDto
 import com.ab.an.data.network.dto.UserDto
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface UserApiService {
@@ -13,4 +15,8 @@ interface UserApiService {
 
     @POST("api/auth/login") // Example endpoint for sign-up
     suspend fun login(@Body request: UserDto): Response<AuthResponseDto>
+
+    @Headers("X-Require-Token: true")
+    @GET("api/auth/me") // Example endpoint for sign-up
+    suspend fun getCurrentUser(): Response<UserDto>
 }

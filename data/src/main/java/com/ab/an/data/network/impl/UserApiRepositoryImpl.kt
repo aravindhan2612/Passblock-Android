@@ -1,6 +1,7 @@
 package com.ab.an.data.network.impl
 
 import com.ab.an.core.utils.Resource
+import com.ab.an.data.mapper.toUser
 import com.ab.an.data.mapper.toUserDto
 import com.ab.an.data.network.api.UserApiService
 import com.ab.an.domain.model.User
@@ -54,6 +55,22 @@ class UserApiRepositoryImpl @Inject constructor(
                 is Resource.Success -> {
                     saveAppData(resource.data?.token)
                     emit(Resource.Success(user))
+                }
+            }
+        }
+    }
+
+    override fun getCurrentUser(): Flow<Resource<User>> = flow {
+        getResult { apiService.getCurrentUser() }.collect { resource ->
+            when (resource) {
+                is Resource.Error -> {
+                    emit(Resource.Error(resource.message))
+                }
+                is Resource.Loading -> {
+                    emit(Resource.Loading())
+                }
+                is Resource.Success -> {
+                    emit(Resource.Success(resource.data?.toUser()))
                 }
             }
         }

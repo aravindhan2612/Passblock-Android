@@ -71,13 +71,14 @@ fun RootGraph(
             )
         }
         composable<RootRoute.ViewPassword> {
+            val viewPassword: RootRoute.ViewPassword = it.toRoute()
             ViewPasswordScreen(
-                id = it.id,
+                id = viewPassword.id,
                 navToHome = {
                     navController.popBackStack()
                 },
                 navToAddOrEditPassword = {
-                    navController.navigate(RootRoute.AddOrEditPassword(true, it.id))
+                    navController.navigate(RootRoute.AddOrEditPassword(true, viewPassword.id))
                 }
             )
         }
