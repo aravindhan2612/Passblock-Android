@@ -26,23 +26,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.util.fastForEachIndexed
-import androidx.navigation3.runtime.NavBackStack
-import androidx.navigation3.runtime.entry
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.ab.an.presentation.home.HomeScreen
-import com.ab.an.presentation.profile.ProfileScreen
 import com.ab.an.presentation.search.SearchScreen
 import com.ab.an.presentation.setting.SettingScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BottomBarGraph(
-    rootBackStack: NavBackStack,
+    rootNavController: NavHostController,
 ) {
-    val backStack = rememberNavBackStack(BottomBarRoute.Home)
+    val navController = rememberNavController()
     var currentRoute: BottomBarRoute by rememberSaveable(
         stateSaver = BottomBarScreenSaver
     ) { mutableStateOf(BottomBarRoute.Home) }
@@ -78,7 +75,7 @@ fun BottomBarGraph(
                 actions = {
                     IconButton(
                         onClick = {
-                            rootBackStack.add(RootRoute.AddOrEditPassword(false))
+                            rootNavController.navigate(RootRoute.AddOrEditPassword(false))
                         }
                     ) {
                         Icon(
@@ -100,13 +97,14 @@ fun BottomBarGraph(
                     NavigationBarItem(
                         selected = isSelected,
                         onClick = {
-                            if (backStack.lastOrNull() != item.route) {
-                                if (backStack.lastOrNull() in bottomNavigationRoutes.map { it.route }) {
-                                    backStack.removeAt(backStack.lastIndex)
+                            navController.navigate(item.route) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    saveState = true
                                 }
-                                backStack.add(item.route)
-                                currentRoute = item.route
+                                launchSingleTop = true
+                                restoreState = true
                             }
+                            currentRoute = item.route
                         },
                         icon = {
                             Icon(
@@ -128,37 +126,29 @@ fun BottomBarGraph(
         }
     ) { innerPadding ->
 
-        NavDisplay(
-            backStack = backStack,
-            entryDecorators = listOf(
-                rememberSavedStateNavEntryDecorator(),
-//                rememberViewModelStoreNavEntryDecorator()
-            ),
-            entryProvider = entryProvider {
-                entry<BottomBarRoute.Home> {
-                    HomeScreen(
-                        innerPadding = innerPadding,
-                        navToAddOrEditPassword = {
-                            rootBackStack.add(RootRoute.AddOrEditPassword(false))
-                        },
-                        navToViewPassword = { id ->
-                            rootBackStack.add(RootRoute.ViewPassword(id = id))
-                        }
-                    )
-                }
-                entry<BottomBarRoute.Profile> {
-                    ProfileScreen(innerPadding)
-                }
-                entry<BottomBarRoute.Search> {
-                    SearchScreen(innerPadding)
-                }
-                entry<BottomBarRoute.Setting> {
-                    SettingScreen(innerPadding, navToAuth = {
-                        rootBackStack.removeLastOrNull()
-                        rootBackStack.add(RootRoute.Auth(false))
-                    })
-                }
+        NavHost(
+            navController = navController,
+            startDestination = BottomBarRoute.Home
+        ) {
+            composable<BottomBarRoute.Home> {
+                HomeScreen(
+                    innerPadding = innerPadding,
+                    navToAddOrEditPassword = {
+                        rootNavController.navigate(RootRoute.AddOrEditPassword(false))
+                    },
+                    navToViewPassword = { id ->
+                        rootNavController.navigate(RootRoute.ViewPassword(id = id))
+                    }
+                )
             }
-        )
+            composable<BottomBarRoute.Search> {
+                SearchScreen(innerPadding)
+            }
+            composable<BottomBarRoute.Setting> {
+                SettingScreen(innerPadding, navToProfile = {
+                    rootNavController.navigate(RootRoute.Profile)
+                })
+            }
+        }
     }
 }

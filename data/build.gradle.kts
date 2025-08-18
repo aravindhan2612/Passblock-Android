@@ -60,6 +60,6 @@ dependencies {
     implementation(libs.google.gson)
     implementation(libs.logging.interceptor)
 
-    implementation(libs.kotlinx.serialization.core)
     implementation(libs.google.fonts)
+
 }

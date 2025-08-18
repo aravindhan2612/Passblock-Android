@@ -2,16 +2,14 @@ package com.ab.an.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
-import androidx.navigation3.runtime.entry
-import androidx.navigation3.runtime.entryProvider
-import androidx.navigation3.runtime.rememberNavBackStack
-import androidx.navigation3.runtime.rememberSavedStateNavEntryDecorator
-import androidx.navigation3.ui.NavDisplay
-import androidx.navigation3.ui.rememberSceneSetupNavEntryDecorator
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.ab.an.presentation.addOrEditPassword.AddOrEditPasswordScreen
 import com.ab.an.presentation.auth.AuthScreen
 import com.ab.an.presentation.onboarding.OnboardingScreen
+import com.ab.an.presentation.profile.ProfileScreen
 import com.ab.an.presentation.splash.SplashScreen
 import com.ab.an.presentation.viewPassword.ViewPasswordScreen
 
@@ -20,68 +18,79 @@ import com.ab.an.presentation.viewPassword.ViewPasswordScreen
 fun RootGraph(
     rootViewModel: RootViewModel = hiltViewModel()
 ) {
-    val backStack = rememberNavBackStack(RootRoute.Splash)
-
-    NavDisplay(
-        backStack = backStack,
-        entryDecorators = listOf(
-            rememberSceneSetupNavEntryDecorator(),
-            rememberSavedStateNavEntryDecorator(),
-            rememberViewModelStoreNavEntryDecorator()
-        ),
-        onBack = {
-            backStack.removeLastOrNull()
-        },
-        entryProvider = entryProvider {
-            entry<RootRoute.Splash> {
-                SplashScreen(onComplete = {
-                    backStack.removeLastOrNull()
-                    backStack.add(it)
-
-                })
-            }
-            entry<RootRoute.Onboarding> {
-                OnboardingScreen(
-                    navToAuth = {
-                        backStack.removeLastOrNull()
-                        backStack.add(RootRoute.Auth(it))
-                    })
-            }
-            entry<RootRoute.Auth> {
-                AuthScreen(
-                    isRegister = it.isRegister,
-                    onComplete = {
-                        backStack.removeLastOrNull()
-                        backStack.add(RootRoute.BottomBarGraph)
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = RootRoute.Splash,
+    ) {
+        composable<RootRoute.Splash> {
+            SplashScreen(onComplete = {
+                navController.navigate(it) {
+                    popUpTo(RootRoute.Splash) {
+                        inclusive = true
                     }
-                )
-            }
-            entry<RootRoute.BottomBarGraph> {
-                BottomBarGraph(
-                    rootBackStack = backStack,
-                )
-            }
-
-            entry<RootRoute.AddOrEditPassword> {
-                AddOrEditPasswordScreen(
-                    it.isEditMode,
-                    navToHome = {
-                        backStack.removeLastOrNull()
-                    },
-                    id = it.id
-                )
-            }
-            entry<RootRoute.ViewPassword> {
-                ViewPasswordScreen(
-                    id = it.id,
-                    navToHome = {
-                        backStack.removeLastOrNull()
-                    },
-                    navToAddOrEditPassword = {
-                        backStack.add(RootRoute.AddOrEditPassword(true, it.id))
-                    }
-                )
-            }
+                }
+            })
         }
-    )
+        composable<RootRoute.Onboarding> {
+            OnboardingScreen(
+                navToAuth = {
+                    navController.navigate(RootRoute.Auth(it)) {
+                        popUpTo(RootRoute.Onboarding) {
+                            inclusive = true
+                        }
+                    }
+                })
+        }
+        composable<RootRoute.Auth> { backStackEntry ->
+            val auth: RootRoute.Auth = backStackEntry.toRoute()
+            AuthScreen(
+                isRegister = auth.isRegister,
+                onComplete = {
+                    navController.navigate(RootRoute.BottomBarGraph) {
+                        popUpTo<RootRoute.Auth> {
+                            inclusive = true
+                        }
+                    }
+                }
+            )
+        }
+        composable<RootRoute.BottomBarGraph> {
+            BottomBarGraph(
+                rootNavController = navController
+            )
+        }
+        composable<RootRoute.AddOrEditPassword> { backStackEntry ->
+            val addOrEditPassword: RootRoute.AddOrEditPassword = backStackEntry.toRoute()
+            AddOrEditPasswordScreen(
+                isEditMode = addOrEditPassword.isEditMode,
+                navToHome = {
+                    navController.popBackStack()
+                },
+                id = addOrEditPassword.id
+            )
+        }
+        composable<RootRoute.ViewPassword> {
+            ViewPasswordScreen(
+                id = it.id,
+                navToHome = {
+                    navController.popBackStack()
+                },
+                navToAddOrEditPassword = {
+                    navController.navigate(RootRoute.AddOrEditPassword(true, it.id))
+                }
+            )
+        }
+        composable<RootRoute.Profile> {
+            ProfileScreen(navToAuth = {
+                navController.navigate(RootRoute.Auth(false)) {
+                    popUpTo<RootRoute.BottomBarGraph> {
+                        inclusive = true
+                    }
+                }
+            }, navBack = {
+                navController.popBackStack()
+            })
+        }
+    }
 }

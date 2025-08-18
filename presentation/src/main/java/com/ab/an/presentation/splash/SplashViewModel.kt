@@ -29,10 +29,12 @@ class SplashViewModel @Inject constructor(private val appDataStoreRepository: Ap
         null
     )
 
-    private suspend fun loadData() {
+    private fun loadData() {
         viewModelScope.launch {
             val appData = listOf(
-                async { appDataStoreRepository.getOnBoardShown().firstOrNull() },
+                async {
+                    appDataStoreRepository.getOnBoardShown().firstOrNull()
+                      },
                 async { appDataStoreRepository.isUserLoggedIn().firstOrNull() }
             ).awaitAll()
             when {

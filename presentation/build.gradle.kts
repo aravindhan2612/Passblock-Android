@@ -59,11 +59,6 @@ dependencies {
     implementation(projects.core)
     implementation(projects.domain)
 
-    implementation(libs.androidx.navigation3.ui)
-    implementation(libs.androidx.navigation3.runtime)
-    implementation(libs.androidx.lifecycle.viewmodel.navigation3)
-    implementation(libs.kotlinx.serialization.core)
-
     implementation(libs.material.icons.extended)
 
     implementation(libs.hilt.android)
@@ -75,4 +70,7 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
+
+    implementation(libs.navigation)
+    implementation(libs.serialization.json)
 }

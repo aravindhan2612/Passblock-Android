@@ -40,7 +40,7 @@ fun SplashScreen(
         speed = 1f
     )
 
-    LaunchedEffect(state?.route, preLoaderProgress) {
+    LaunchedEffect(state?.route) {
         if (state?.route != null) {
             state?.route?.let { route -> onComplete(route) }
         }

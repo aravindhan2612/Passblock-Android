@@ -1,24 +1,203 @@
 package com.ab.an.presentation.profile
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
+import androidx.compose.material.icons.outlined.Mail
+import androidx.compose.material.icons.outlined.Password
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ab.an.core.R
+import com.ab.an.presentation.components.FavIconAsyncImage
+import com.ab.an.presentation.components.PrimaryOutlinedButton
 import com.ab.an.presentation.components.PrimaryText
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(innerPadding: PaddingValues) {
+fun ProfileScreen(
+    navToAuth: () -> Unit,
+    navBack :() -> Unit,
+    viewModel: ProfileViewModel = hiltViewModel()
+) {
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
-    Column(
+    LaunchedEffect(state) {
+        if (state) {
+            navToAuth()
+        }
+    }
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(text = "Profile")
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.secondary,
+                    titleContentColor = MaterialTheme.colorScheme.primary
+                ),
+                navigationIcon = {
+                    IconButton(
+                        onClick = navBack
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = null,
+                        )
+                    }
+                }
+            )
+        },
+        bottomBar = {
+            NavigationBar(
+                containerColor = MaterialTheme.colorScheme.secondary
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(10.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    PrimaryOutlinedButton(
+                        onClick = {
+                            viewModel.logout()
+                        },
+                        label = "Log out"
+                    )
+                }
+            }
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .background(
+                    color = MaterialTheme.colorScheme.secondary
+                )
+                .padding(16.dp),
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(20.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Surface(
+                    modifier = Modifier
+                        .size(100.dp)
+                        .clip(CircleShape),
+                    color = MaterialTheme.colorScheme.primary
+                ) {
+                    FavIconAsyncImage(
+                        defaultPainter = painterResource(id = R.drawable.baseline_person_24),
+                        model = null,
+                        defaultPainterColor = MaterialTheme.colorScheme.secondary
+                    )
+                }
+                Spacer(modifier = Modifier.size(16.dp))
+                PrimaryText(
+                    text = "Ethan Carter",
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 20.sp
+                )
+                PrimaryText(
+                    text = "Ethan.carter@email.com",
+                )
+                Text(
+                    text = "8777217272",
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            }
+            AccountRow(
+                leadingIcon = Icons.Outlined.Password,
+                label = "Change Password",
+                trailingIcon = Icons.AutoMirrored.Outlined.ArrowForwardIos,
+                onClick = {}
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            AccountRow(
+                leadingIcon = Icons.Outlined.Mail,
+                label = "Update Contact Information",
+                trailingIcon = Icons.AutoMirrored.Outlined.ArrowForwardIos,
+                onClick = {}
+            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+        }
+    }
+}
+
+@Composable
+fun AccountRow(
+    leadingIcon: ImageVector,
+    label: String,
+    trailingIcon: ImageVector,
+    onClick: () -> Unit
+) {
+    Row(
         modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()
+            .fillMaxWidth()
+            .clickable {
+                onClick()
+            }
+            .padding(8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Absolute.SpaceBetween
     ) {
-        PrimaryText(
-            text = "Profile screen"
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Icon(
+                imageVector = leadingIcon,
+                contentDescription = label,
+                modifier = Modifier.padding(5.dp)
+            )
+            Spacer(modifier = Modifier.size(20.dp))
+            PrimaryText(
+                text = label
+            )
+        }
+        Icon(
+            imageVector = trailingIcon,
+            contentDescription = label,
+            modifier = Modifier.size(16.dp)
         )
     }
 }
