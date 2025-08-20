@@ -17,7 +17,12 @@ sealed class RootRoute()  {
     @Serializable
     data class ViewPassword(val id: String) : RootRoute()
     @Serializable
-    object Profile: RootRoute()
+    object ViewProfile: RootRoute()
+
+    @Serializable
+    object UpdateContactInfo: RootRoute()
+    @Serializable
+    data class ChangePassword(val id: String): RootRoute()
 
 }
 

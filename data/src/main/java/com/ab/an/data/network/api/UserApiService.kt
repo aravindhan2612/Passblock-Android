@@ -10,13 +10,17 @@ import retrofit2.http.POST
 
 interface UserApiService {
 
-    @POST("api/auth/register") // Example endpoint for sign-in
+    @POST("api/user/register") // Example endpoint for sign-in
     suspend fun register(@Body request: UserDto): Response<AuthResponseDto>
 
-    @POST("api/auth/login") // Example endpoint for sign-up
+    @POST("api/user/login") // Example endpoint for sign-up
     suspend fun login(@Body request: UserDto): Response<AuthResponseDto>
 
     @Headers("X-Require-Token: true")
-    @GET("api/auth/me") // Example endpoint for sign-up
+    @GET("api/user/me") // Example endpoint for sign-up
     suspend fun getCurrentUser(): Response<UserDto>
+
+    @Headers("X-Require-Token: true")
+    @POST("api/user/updateUser") // Example endpoint for sign-up
+    suspend fun updateUserProfile(@Body request: UserDto): Response<UserDto>
 }

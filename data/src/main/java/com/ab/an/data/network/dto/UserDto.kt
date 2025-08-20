@@ -9,5 +9,11 @@ data class UserDto(
     @SerializedName("fullName")
     val fullName: String? = null ,
     @SerializedName("password")
-    val password: String? = null
+    val password: String? = null,
+    @SerializedName("phoneNumber")
+    val phoneNumber: String? = null,
+    @SerializedName("dateOfBirth")
+    val dob: String? = null,
+    @SerializedName("profilePicture")
+    val profilePicture: String? = null
 )

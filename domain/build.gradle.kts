@@ -48,4 +48,7 @@ dependencies {
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
+    implementation(libs.serialization.json)
+
+    implementation(libs.libphonenuumber)
 }

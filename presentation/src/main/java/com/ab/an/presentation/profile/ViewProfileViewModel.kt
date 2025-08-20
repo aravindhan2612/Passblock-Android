@@ -15,17 +15,17 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProfileViewModel @Inject constructor(
+class ViewProfileViewModel @Inject constructor(
     private val appDataStoreRepository: AppDataStoreRepository,
     private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
-    private val _state = MutableStateFlow(ProfileState())
+    private val _state = MutableStateFlow(ViewProfileState())
     val state = _state.onStart {
         fetchUser()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),
-        initialValue = ProfileState()
+        initialValue = ViewProfileState()
     )
 
     private fun fetchUser() {
@@ -56,7 +56,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    fun logout() {
+     fun logout() {
         viewModelScope.launch {
             async { appDataStoreRepository.setUserLoggedIn(false) }.await()
             async { appDataStoreRepository.saveJwtToken(null) }.await()

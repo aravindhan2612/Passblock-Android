@@ -26,6 +26,7 @@ gsonVersion = "2.9.1"
 loggingInterceptorVersion = "4.12.0"
 google-fonts-version = "1.8.1"
 coil = "3.3.0"
+libphonenumberVersion = "8.13.20"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -72,6 +73,8 @@ google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.re
 #coil
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
+
+libphonenuumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref ="libphonenumberVersion"}
 
 
 [plugins]

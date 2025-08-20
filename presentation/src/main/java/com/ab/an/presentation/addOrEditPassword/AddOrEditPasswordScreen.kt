@@ -2,8 +2,6 @@ package com.ab.an.presentation.addOrEditPassword
 
 import android.annotation.SuppressLint
 import android.widget.Toast
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,7 +13,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,7 +24,6 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -36,6 +32,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.R
 import com.ab.an.presentation.components.DynamicSelectTextField
+import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryOutlinedTextField
 
@@ -189,7 +186,7 @@ fun AddOrEditPasswordScreen(
                             )
                         )
                     },
-                    label = if (isEditMode) "Edit" else "Add",
+                    label = "Submit",
                     modifier = Modifier
                         .padding(20.dp)
                         .fillMaxWidth(),
@@ -215,19 +212,7 @@ fun AddOrEditPasswordScreen(
                 )
             }
             if (state.isLoading) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(
-                            MaterialTheme.colorScheme.secondary.copy(
-                                alpha = 0.5f
-                            )
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    CircularProgressIndicator()
-                }
+                LoadingIndicatorScreen()
             }
         }
     }

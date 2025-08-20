@@ -16,7 +16,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.DeleteOutline
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -45,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.R
 import com.ab.an.presentation.components.FavIconAsyncImage
+import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.OnPrimaryText
 import com.ab.an.presentation.components.PrimaryOutlinedButton
 import com.ab.an.presentation.components.PrimaryText
@@ -114,19 +114,7 @@ fun ViewPasswordScreen(
         ) {
             when {
                 state.isLoading -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                MaterialTheme.colorScheme.secondary.copy(
-                                    alpha = 0.5f
-                                )
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    LoadingIndicatorScreen()
                 }
 
                 !state.error.isNullOrBlank() -> {
@@ -244,7 +232,7 @@ fun ViewPasswordScreen(
                                 dismissOnClickOutside = false
                             ),
                             onDismissRequest = {
-                                viewPasswordViewModel.onIntent(ViewPasswordIntent.CloseDeleteDialog)
+                                //viewPasswordViewModel.onIntent(ViewPasswordIntent.CloseDeleteDialog)
                             },
                             confirmButton = {
                                 TextButton(

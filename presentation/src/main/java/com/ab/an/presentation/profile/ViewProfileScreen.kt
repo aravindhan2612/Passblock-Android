@@ -1,5 +1,6 @@
 package com.ab.an.presentation.profile
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,8 +24,8 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Password
+import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,26 +39,29 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import coil3.compose.AsyncImage
 import com.ab.an.core.R
-import com.ab.an.presentation.components.FavIconAsyncImage
+import com.ab.an.core.utils.CommonUtils
+import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.PrimaryOutlinedButton
 import com.ab.an.presentation.components.PrimaryText
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(
+fun ViewProfileScreen(
     navToAuth: () -> Unit,
     navBack: () -> Unit,
-    viewModel: ProfileViewModel = hiltViewModel()
+    navToUpdateContact: (String) -> Unit,
+    viewModel: ViewProfileViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
 
@@ -66,6 +70,7 @@ fun ProfileScreen(
             navToAuth()
         }
     }
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.secondary
@@ -116,17 +121,25 @@ fun ProfileScreen(
                             .fillMaxWidth(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                     ) {
-                        Surface(
-                            modifier = Modifier
-                                .size(100.dp)
-                                .clip(CircleShape),
-                            color = MaterialTheme.colorScheme.primary
+                        Card(
+                            modifier = Modifier.size(120.dp),
+                            shape = CircleShape
                         ) {
-                            FavIconAsyncImage(
-                                defaultPainter = painterResource(id = R.drawable.baseline_person_24),
-                                model = null,
-                                defaultPainterColor = MaterialTheme.colorScheme.secondary
-                            )
+                            if (state.user.profilePicture.isNotBlank()) {
+                                AsyncImage(
+                                    model = CommonUtils.decodeBase64ToByteArray(state.user.profilePicture),
+                                    contentDescription = "Profile Picture",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            } else {
+                                Image(
+                                    painter = painterResource(R.drawable.baseline_person_24),
+                                    contentDescription = "Profile Picture",
+                                    modifier = Modifier.fillMaxSize(),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
                         }
                         Spacer(modifier = Modifier.size(16.dp))
                         PrimaryText(
@@ -138,7 +151,7 @@ fun ProfileScreen(
                             text = state.user.email
                         )
                         Text(
-                            text = "8777217272",
+                            text = state.user.phoneNumber,
                             color = MaterialTheme.colorScheme.onPrimary
                         )
                     }
@@ -146,14 +159,18 @@ fun ProfileScreen(
                         leadingIcon = Icons.Outlined.Password,
                         label = "Change Password",
                         trailingIcon = Icons.AutoMirrored.Outlined.ArrowForwardIos,
-                        onClick = {}
+                        onClick = {
+
+                        }
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     AccountRow(
                         leadingIcon = Icons.Outlined.Mail,
                         label = "Update Contact Information",
                         trailingIcon = Icons.AutoMirrored.Outlined.ArrowForwardIos,
-                        onClick = {}
+                        onClick = {
+                            navToUpdateContact(state.user.id)
+                        }
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     Row(
@@ -172,19 +189,7 @@ fun ProfileScreen(
                     }
                 }
                 if (state.isLoading) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                MaterialTheme.colorScheme.secondary.copy(
-                                    alpha = 0.5f
-                                )
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator()
-                    }
+                    LoadingIndicatorScreen()
                 }
             }
         }

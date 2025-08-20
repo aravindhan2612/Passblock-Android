@@ -72,27 +72,31 @@ fun BottomBarGraph(
                         )
                     },
                     navigationIcon = {
-                        IconButton(
-                            onClick = {
-                                rootNavController.navigate(RootRoute.Profile)
+                        if(currentRoute.showNavigationIcon) {
+                            IconButton(
+                                onClick = {
+                                    rootNavController.navigate(RootRoute.ViewProfile)
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.Person,
+                                    contentDescription = null
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Default.Person,
-                                contentDescription = null
-                            )
                         }
                     },
                     actions = {
-                        IconButton(
-                            onClick = {
-                                rootNavController.navigate(RootRoute.AddOrEditPassword(false))
+                        if(currentRoute.showActionIcon) {
+                            IconButton(
+                                onClick = {
+                                    rootNavController.navigate(RootRoute.AddOrEditPassword(false))
+                                }
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Outlined.Add,
+                                    contentDescription = null
+                                )
                             }
-                        ) {
-                            Icon(
-                                imageVector = Icons.Outlined.Add,
-                                contentDescription = null
-                            )
                         }
                     }
                 )
@@ -157,7 +161,7 @@ fun BottomBarGraph(
                 }
                 composable<BottomBarRoute.Setting> {
                     SettingScreen(innerPadding, navToProfile = {
-                        rootNavController.navigate(RootRoute.Profile)
+                        rootNavController.navigate(RootRoute.ViewProfile)
                     })
                 }
             }

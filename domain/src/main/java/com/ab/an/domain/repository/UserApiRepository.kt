@@ -11,4 +11,6 @@ interface UserApiRepository {
     fun login(user: User): Flow<Resource<User>>
 
     fun getCurrentUser(): Flow<Resource<User>>
+
+    fun updateUserProfile(user: User): Flow<Resource<User>>
 }

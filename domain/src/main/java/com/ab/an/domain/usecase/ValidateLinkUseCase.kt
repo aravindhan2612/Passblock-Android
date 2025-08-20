@@ -5,7 +5,7 @@ import javax.inject.Inject
 
 class ValidateLinkUseCase @Inject constructor() {
     operator fun invoke(url: String?): String {
-        return if( !url.isNullOrBlank() &&!Patterns.WEB_URL.matcher(url).matches()) {
+        return if (!url.isNullOrBlank() && !Patterns.WEB_URL.matcher(url).matches()) {
             "Invalid URL"
         } else {
             ""

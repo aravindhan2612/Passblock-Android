@@ -13,17 +13,25 @@ import com.ab.an.core.utils.Constants
 import kotlinx.serialization.Serializable
 
 @Serializable
-sealed class BottomBarRoute(val title: String) {
+sealed class BottomBarRoute(
+    val title: String,
+    val showNavigationIcon: Boolean = false,
+    val showActionIcon: Boolean = false,
+) {
     @Serializable
-    object Home: BottomBarRoute(
+    object Home : BottomBarRoute(
         title = Constants.PASSWORDS,
+        showNavigationIcon = true,
+        showActionIcon = true
     )
+
     @Serializable
-    object Search: BottomBarRoute(
+    object Search : BottomBarRoute(
         title = Constants.SEARCH,
     )
+
     @Serializable
-    object Setting: BottomBarRoute(
+    object Setting : BottomBarRoute(
         title = Constants.SETTING,
     )
 }
@@ -50,7 +58,7 @@ val bottomNavigationRoutes = listOf(
     ),
     NavigationBarItemDetail(
         BottomBarRoute.Setting,
-        "Setting",
+        "Settings",
         outlineIcon = Icons.Outlined.Settings,
         filledIcon = Icons.Filled.Settings
     )

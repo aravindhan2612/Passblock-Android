@@ -21,14 +21,16 @@ class UserApiRepositoryImpl @Inject constructor(
         getResult {
             val postDto = user.toUserDto()
             apiService.register(postDto)
-        }.collect {  resource ->
+        }.collect { resource ->
             when (resource) {
                 is Resource.Error -> {
                     emit(Resource.Error(resource.message))
                 }
+
                 is Resource.Loading -> {
                     emit(Resource.Loading())
                 }
+
                 is Resource.Success -> {
                     saveAppData(resource.data?.token)
                     emit(Resource.Success(user))
@@ -45,13 +47,15 @@ class UserApiRepositoryImpl @Inject constructor(
             // Map domain model to DTO for the API request
             apiService.login(user.toUserDto().copy(fullName = null))
         }.collect { resource ->
-            when(resource) {
+            when (resource) {
                 is Resource.Error -> {
                     emit(Resource.Error(resource.message))
                 }
+
                 is Resource.Loading -> {
                     emit(Resource.Loading())
                 }
+
                 is Resource.Success -> {
                     saveAppData(resource.data?.token)
                     emit(Resource.Success(user))
@@ -62,6 +66,24 @@ class UserApiRepositoryImpl @Inject constructor(
 
     override fun getCurrentUser(): Flow<Resource<User>> = flow {
         getResult { apiService.getCurrentUser() }.collect { resource ->
+            when (resource) {
+                is Resource.Error -> {
+                    emit(Resource.Error(resource.message))
+                }
+
+                is Resource.Loading -> {
+                    emit(Resource.Loading())
+                }
+
+                is Resource.Success -> {
+                    emit(Resource.Success(resource.data?.toUser()))
+                }
+            }
+        }
+    }
+
+    override fun updateUserProfile(user: User): Flow<Resource<User>> = flow {
+        getResult { apiService.updateUserProfile(user.toUserDto()) }.collect { resource ->
             when (resource) {
                 is Resource.Error -> {
                     emit(Resource.Error(resource.message))
