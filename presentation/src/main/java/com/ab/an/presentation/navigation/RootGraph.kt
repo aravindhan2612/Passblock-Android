@@ -107,6 +107,9 @@ fun RootGraph(
             UpdateContactInfoScreen(
                 navBack = {
                     navController.popBackStack()
+                },
+                navToAddOrEditProfilePicture = {
+                    navController.navigate(RootRoute.AddOrEditProfilePicture)
                 }
             )
         }

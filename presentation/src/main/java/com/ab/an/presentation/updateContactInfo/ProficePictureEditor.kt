@@ -32,57 +32,37 @@ import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
 import com.ab.an.core.R
 import com.ab.an.core.utils.CommonUtils
+import com.ab.an.presentation.components.ProfilePictureAsyncImage
 import kotlinx.coroutines.launch
 import java.io.InputStream
 
 @Composable
-fun ProfilePictureEditor(profilePicture: String, onImageChange: (String) -> Unit) {
+fun ProfilePictureEditor(
+    fullName: String,
+    profilePicture: String,
+    onClick: () -> Unit) {
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
 
-    val galleryLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent()
-    ) { uri: Uri? ->
-        uri?.let { validUri ->
-            scope.launch {
-                val inputStream: InputStream? = context.contentResolver.openInputStream(validUri)
-                val bytes = inputStream?.readBytes()
-                bytes?.let { data ->
-                    onImageChange(CommonUtils.convertByteArrayToBase64(data))
-                }
-            }
-        }
-    }
-
-    // Composable layout for the profile picture
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxWidth()
     ) {
-        // Display the profile picture
         Box {
             Card(
-                modifier = Modifier.size(120.dp),
+                modifier = Modifier
+                    .size(120.dp)
+                    .padding(),
                 shape = CircleShape
             ) {
-                if (profilePicture.isNotBlank()) {
-                    AsyncImage(
-                        model = CommonUtils.decodeBase64ToByteArray(profilePicture),
-                        contentDescription = "Profile Picture",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(R.drawable.baseline_person_24),
-                        contentDescription = "Profile Picture",
-                        modifier = Modifier.fillMaxSize(),
-                        contentScale = ContentScale.Crop
-                    )
-                }
+                ProfilePictureAsyncImage(
+                    label = fullName,
+                    fileName = profilePicture,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
             IconButton(
-                onClick = { galleryLauncher.launch("image/*") },
+                onClick = onClick,
                 modifier = Modifier
                     .padding(end = 12.dp)
                     .size(32.dp)

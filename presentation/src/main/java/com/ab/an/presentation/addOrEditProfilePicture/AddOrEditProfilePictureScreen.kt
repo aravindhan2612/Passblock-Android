@@ -17,7 +17,11 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.AddAPhoto
+import androidx.compose.material.icons.outlined.AddPhotoAlternate
+import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -40,6 +44,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.utils.Constants
 import com.ab.an.presentation.components.ErrorDialog
+import com.ab.an.presentation.components.LeadingIconButton
 import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.PrimaryText
 import com.ab.an.presentation.components.ProfilePictureAsyncImage
@@ -58,7 +63,7 @@ fun AddOrEditPictureScreen(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { validUri ->
-            addOrEditProfilePictureViewModel.uploadImage(context, validUri)
+            addOrEditProfilePictureViewModel.onIntent(AddOrEditProfilePictureIntent.UploadProfilePicture(context, validUri))
         }
     }
 
@@ -131,36 +136,70 @@ fun AddOrEditPictureScreen(
                             ) {
                                 ProfilePictureAsyncImage(
                                     label = state.fullName,
-                                    model = Constants.E_BASE_URL + state.profilePicture,
+                                    fileName =  state.profilePicture,
                                     modifier = Modifier.fillMaxSize(),
                                     fontSize = 40.sp
                                 )
                             }
                         }
 
-                        Button(
-                            onClick = { galleryLauncher.launch("image/*") },
-                            modifier = Modifier
-                                .padding(top = 20.dp)
-                                .fillMaxWidth()
+                        Row(
+                            modifier = Modifier.fillMaxWidth()
                         ) {
+
+                        }
+                        if(state.profilePicture.isNotBlank()) {
                             Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceAround,
                             ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.AddAPhoto,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.secondary,
-                                    modifier = Modifier.size(16.dp)
+                                LeadingIconButton(
+                                    onClick = {
+                                        galleryLauncher.launch("image/*")
+                                    },
+                                    label = "Change",
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.Filled.Edit,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.secondary,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
                                 )
-                                Text(
-                                    text = "Add profile picture",
-                                    color = MaterialTheme.colorScheme.secondary,
-                                    fontSize = 16.sp,
-                                    fontWeight = FontWeight.SemiBold
+                                LeadingIconButton(
+                                    onClick = {
+                                        addOrEditProfilePictureViewModel.onIntent(AddOrEditProfilePictureIntent.DeleteProfilePicture)
+                                    },
+                                    label = "Delete",
+                                    icon = {
+                                        Icon(
+                                            imageVector = Icons.Filled.Delete,
+                                            contentDescription = null,
+                                            tint = MaterialTheme.colorScheme.secondary,
+                                            modifier = Modifier.size(16.dp)
+                                        )
+                                    }
                                 )
                             }
+                        } else {
+                            LeadingIconButton(
+                                onClick = {
+                                    galleryLauncher.launch("image/*")
+                                },
+                                modifier = Modifier
+                                    .padding(top = 20.dp)
+                                    .fillMaxWidth(),
+                                label = "Add profile picture",
+                                icon = {
+                                    Icon(
+                                        imageVector = Icons.Outlined.AddPhotoAlternate,
+                                        contentDescription = null,
+                                        tint = MaterialTheme.colorScheme.secondary,
+                                        modifier = Modifier.size(16.dp)
+                                    )
+                                }
+                            )
                         }
                     }
                 }

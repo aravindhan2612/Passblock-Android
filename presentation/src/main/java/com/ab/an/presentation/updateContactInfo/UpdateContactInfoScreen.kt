@@ -40,6 +40,7 @@ import com.ab.an.presentation.components.PrimaryOutlinedTextField
 @Composable
 fun UpdateContactInfoScreen(
     navBack: () -> Unit,
+    navToAddOrEditProfilePicture: () -> Unit,
     viewModel: UpdateContactInfoViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
@@ -100,9 +101,10 @@ fun UpdateContactInfoScreen(
                             .verticalScroll(rememberScrollState())
                     ) {
                         ProfilePictureEditor(
+                            fullName = state.user.fullName,
                             profilePicture = state.user.profilePicture,
-                            onImageChange = {
-                                viewModel.onIntent(UpdateContactInfoIntent.ImageChange(it))
+                            onClick = {
+                               navToAddOrEditProfilePicture()
                             })
                         PrimaryOutlinedTextField(
                             value = state.user.fullName,

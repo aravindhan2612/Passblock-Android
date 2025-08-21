@@ -85,12 +85,6 @@ class UpdateContactInfoViewModel @Inject constructor(
             is UpdateContactInfoIntent.Submit -> {
                 submit(intent.context)
             }
-
-            is UpdateContactInfoIntent.ImageChange -> {
-               _state.value = _state.value.copy(
-                   user = _state.value.user.copy(profilePicture = intent.base64)
-               )
-            }
         }
     }
 

@@ -134,7 +134,7 @@ fun ViewProfileScreen(
                         ) {
                             ProfilePictureAsyncImage(
                                 label = state.user.fullName,
-                                model = Constants.E_BASE_URL + state.user.profilePicture,
+                                fileName = state.user.profilePicture,
                                 modifier = Modifier.fillMaxSize()
                             )
                         }

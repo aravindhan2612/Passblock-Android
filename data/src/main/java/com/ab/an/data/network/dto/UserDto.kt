@@ -14,6 +14,6 @@ data class UserDto(
     val phoneNumber: String? = null,
     @SerializedName("dateOfBirth")
     val dob: String? = null,
-    @SerializedName("profilePicture")
+    @SerializedName("profilePictureName")
     val profilePicture: String? = null
 )

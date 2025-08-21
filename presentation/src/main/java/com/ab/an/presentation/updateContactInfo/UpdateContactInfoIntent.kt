@@ -9,5 +9,4 @@ sealed class UpdateContactInfoIntent {
     data class PhoneNumberChange(val phoneNumber: String): UpdateContactInfoIntent()
     data class DateChange(val date: String): UpdateContactInfoIntent()
     data class Submit(val context: Context): UpdateContactInfoIntent()
-    data class ImageChange(val base64: String): UpdateContactInfoIntent()
 }
