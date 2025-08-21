@@ -8,34 +8,18 @@ import java.util.TimeZone
 
 object DateUtils {
 
-    private const val CUSTOM_PATTERN = "dd-MM-yyyy"
-    private const val ISO_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
-
-    fun fromCustomToIso(dateStr: String?): String {
-        if (dateStr.isNullOrEmpty()) return ""
+    const val DOB_PATTERN = "dd-MM-yyyy"
+    const val BIRTH_DAY_PATTERN = "dd MMMM yyyy"
+    const val ISO_PATTERN = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"
+    fun formatDateString(dateString: String?, inputFormat: String, outputFormat: String): String {
+        if (dateString.isNullOrEmpty()) return ""
         return try {
-            val customFormatter = SimpleDateFormat(CUSTOM_PATTERN, Locale.getDefault())
-            val isoFormatter = SimpleDateFormat(ISO_PATTERN, Locale.getDefault()).apply {
+            val inputFormatter = SimpleDateFormat(inputFormat, Locale.getDefault()).apply {
                 timeZone = TimeZone.getTimeZone("UTC")
             }
-            val date = customFormatter.parse(dateStr)
-            if (date != null) {
-                isoFormatter.format(date)
-            } else ""
-        } catch (e: ParseException) {
-            ""
-        }
-    }
-
-    fun fromIsoToCustom(isoStr: String?): String {
-        if (isoStr.isNullOrEmpty()) return ""
-        return try {
-            val isoFormatter = SimpleDateFormat(ISO_PATTERN, Locale.getDefault()).apply {
-                timeZone = TimeZone.getTimeZone("UTC")
-            }
-            val customFormatter = SimpleDateFormat(CUSTOM_PATTERN, Locale.getDefault())
-            val date = isoFormatter.parse(isoStr)
-            if (date != null) customFormatter.format(date) else ""
+            val outputFormatter = SimpleDateFormat(outputFormat, Locale.getDefault())
+            val date = inputFormatter.parse(dateString)
+            if (date != null) outputFormatter.format(date) else ""
         } catch (e: ParseException) {
             ""
         }
@@ -44,7 +28,7 @@ object DateUtils {
 
     fun convertMillisToDate(millis: Long): String {
         return try {
-            val formatter = SimpleDateFormat(CUSTOM_PATTERN, Locale.getDefault()).apply {
+            val formatter = SimpleDateFormat(DOB_PATTERN, Locale.getDefault()).apply {
                 timeZone = TimeZone.getTimeZone("UTC")
             }
             return formatter.format(Date(millis))

@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.ab.an.presentation.addOrEditPassword.AddOrEditPasswordScreen
+import com.ab.an.presentation.addOrEditProfilePicture.AddOrEditPictureScreen
 import com.ab.an.presentation.auth.AuthScreen
 import com.ab.an.presentation.onboarding.OnboardingScreen
 import com.ab.an.presentation.profile.ViewProfileScreen
@@ -86,20 +87,31 @@ fun RootGraph(
         composable<RootRoute.ViewProfile> {
             ViewProfileScreen(
                 navToAuth = {
-                navController.navigate(RootRoute.Auth(false)) {
-                    popUpTo<RootRoute.BottomBarGraph> {
-                        inclusive = true
+                    navController.navigate(RootRoute.Auth(false)) {
+                        popUpTo<RootRoute.BottomBarGraph> {
+                            inclusive = true
+                        }
                     }
-                }
-            }, navBack = {
-                navController.popBackStack()
-            },
+                }, navBack = {
+                    navController.popBackStack()
+                },
                 navToUpdateContact = {
                     navController.navigate(RootRoute.UpdateContactInfo)
-                })
+                },
+                navToAddOrEditProfilePicture = {
+                    navController.navigate(RootRoute.AddOrEditProfilePicture)
+                }
+            )
         }
         composable<RootRoute.UpdateContactInfo> {
             UpdateContactInfoScreen(
+                navBack = {
+                    navController.popBackStack()
+                }
+            )
+        }
+        composable<RootRoute.AddOrEditProfilePicture> {
+            AddOrEditPictureScreen(
                 navBack = {
                     navController.popBackStack()
                 }

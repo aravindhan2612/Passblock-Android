@@ -1,5 +1,6 @@
 package com.ab.an.data.di
 
+import com.ab.an.core.utils.Constants
 import com.ab.an.data.network.CustomInterceptor
 import com.ab.an.data.network.api.PasswordApiService
 import com.ab.an.data.network.api.UserApiService
@@ -27,7 +28,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
-    private const val E_BASE_URL = "http://10.0.2.2:3000/"
 
     @Provides
     @Singleton
@@ -120,7 +120,7 @@ object NetworkModule {
         gsonConverterFactory: GsonConverterFactory
     ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(E_BASE_URL) // Set the base URL for all API calls
+            .baseUrl(Constants.E_BASE_URL) // Set the base URL for all API calls
             .client(okHttpClient) // Set the HTTP client
             .addConverterFactory(gsonConverterFactory) // Add the JSON converter
             .build()

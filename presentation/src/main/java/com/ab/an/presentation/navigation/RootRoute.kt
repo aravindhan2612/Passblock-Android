@@ -23,6 +23,8 @@ sealed class RootRoute()  {
     object UpdateContactInfo: RootRoute()
     @Serializable
     data class ChangePassword(val id: String): RootRoute()
+    @Serializable
+    object AddOrEditProfilePicture: RootRoute()
 
 }
 

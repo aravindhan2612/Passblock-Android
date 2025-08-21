@@ -9,6 +9,10 @@ import com.ab.an.domain.repository.AppDataStoreRepository
 import com.ab.an.domain.repository.UserApiRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.UUID
 import javax.inject.Inject
 
 class UserApiRepositoryImpl @Inject constructor(
@@ -84,6 +88,24 @@ class UserApiRepositoryImpl @Inject constructor(
 
     override fun updateUserProfile(user: User): Flow<Resource<User>> = flow {
         getResult { apiService.updateUserProfile(user.toUserDto()) }.collect { resource ->
+            when (resource) {
+                is Resource.Error -> {
+                    emit(Resource.Error(resource.message))
+                }
+                is Resource.Loading -> {
+                    emit(Resource.Loading())
+                }
+                is Resource.Success -> {
+                    emit(Resource.Success(resource.data?.toUser()))
+                }
+            }
+        }
+    }
+
+    override fun uploadProfilePicture(profilePicture: ByteArray): Flow<Resource<User>> = flow {
+        val requestFile = profilePicture.toRequestBody("image/*".toMediaTypeOrNull())
+        val body = MultipartBody.Part.createFormData("profilePicture", "${UUID.randomUUID()}.jpg", requestFile)
+        getResult { apiService.uploadProfilePicture(body) }.collect { resource ->
             when (resource) {
                 is Resource.Error -> {
                     emit(Resource.Error(resource.message))

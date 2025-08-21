@@ -2,11 +2,14 @@ package com.ab.an.data.network.api
 
 import com.ab.an.data.network.dto.AuthResponseDto
 import com.ab.an.data.network.dto.UserDto
+import okhttp3.MultipartBody
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Headers
+import retrofit2.http.Multipart
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 interface UserApiService {
 
@@ -23,4 +26,11 @@ interface UserApiService {
     @Headers("X-Require-Token: true")
     @POST("api/user/updateUser") // Example endpoint for sign-up
     suspend fun updateUserProfile(@Body request: UserDto): Response<UserDto>
+
+    @Multipart
+    @Headers("X-Require-Token: true")
+    @POST("api/user/upload-profile-picture")
+    suspend fun uploadProfilePicture(
+        @Part profilePicture: MultipartBody.Part
+    ): Response<UserDto>
 }

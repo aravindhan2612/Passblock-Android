@@ -27,6 +27,7 @@ fun FavIconAsyncImage(
     model: String? = null,
     defaultPainterColor: Color = MaterialTheme.colorScheme.primary
 ) {
+
     SubcomposeAsyncImage(
         model = model,
         contentDescription = "",

@@ -13,4 +13,6 @@ interface UserApiRepository {
     fun getCurrentUser(): Flow<Resource<User>>
 
     fun updateUserProfile(user: User): Flow<Resource<User>>
+
+    fun uploadProfilePicture(profilePicture: ByteArray): Flow<Resource<User>>
 }

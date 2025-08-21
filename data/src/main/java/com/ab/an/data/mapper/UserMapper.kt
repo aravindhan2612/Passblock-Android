@@ -10,7 +10,7 @@ fun UserDto.toUser(): User {
         fullName = fullName ?: "",
         password = password ?: "",
         phoneNumber = phoneNumber ?: "",
-        dob = DateUtils.fromIsoToCustom(dob),
+        dob = DateUtils.formatDateString(dob, DateUtils.ISO_PATTERN, DateUtils.DOB_PATTERN),
         profilePicture = profilePicture ?: ""
     )
 }
@@ -21,7 +21,7 @@ fun User.toUserDto(): UserDto {
         fullName = fullName,
         password = password,
         phoneNumber = phoneNumber,
-        dob = DateUtils.fromCustomToIso(dob),
+        dob = DateUtils.formatDateString(dob, DateUtils.DOB_PATTERN, DateUtils.ISO_PATTERN ),
         profilePicture = profilePicture
     )
 }
