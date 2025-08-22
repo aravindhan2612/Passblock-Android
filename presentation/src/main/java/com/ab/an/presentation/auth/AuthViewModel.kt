@@ -1,8 +1,8 @@
 package com.ab.an.presentation.auth
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ab.an.core.utils.Constants
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.model.User
 import com.ab.an.domain.usecase.UserLoginUseCase
@@ -10,7 +10,9 @@ import com.ab.an.domain.usecase.UserRegisterUseCase
 import com.ab.an.domain.usecase.ValidateEmailUseCase
 import com.ab.an.domain.usecase.ValidatePasswordUseCase
 import com.ab.an.domain.usecase.ValidateUsernameUseCase
+import com.ab.an.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onEach
@@ -20,6 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val loginUseCase: UserLoginUseCase,
     private val registerUseCase: UserRegisterUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,
@@ -75,7 +78,7 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun auth(title: String) {
-        if (title == Constants.REGISTER) {
+        if (title == context.getString(R.string.register)) {
             register()
         } else {
             login()

@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -57,7 +58,7 @@ fun AuthScreen(
     authViewModel: AuthViewModel = hiltViewModel()
 ) {
     val state by authViewModel.state.collectAsStateWithLifecycle()
-    val titles = listOf(Constants.REGISTER, Constants.LOGIN)
+    val titles = listOf(stringResource(com.ab.an.presentation.R.string.register), stringResource(com.ab.an.presentation.R.string.login))
     val pagerState =
         rememberPagerState(initialPage = if (isRegister) 0 else 1, pageCount = { titles.size })
     val coroutineScope = rememberCoroutineScope()

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="email">Email</string>
+    <string name="email_icon">Email Icon</string>
+    <string name="password">Password</string>
+    <string name="password_icon">Password Icon</string>
+    <string name="hide_password">Hide password</string>
+    <string name="show_password">Show password</string>
+    <string name ="pass_block">Passblock</string>
+    <string name="frictionless_security">Frictionless Security</string>
+    <string name="ob_description_1">This application is build on blockchain so that you can get 100% security across websites &amp; applications with single app.</string>
+    <string name="control_your_security">Control your security</string>
+    <string name="fast">Fast</string>
+    <string name="everything_in_single_click">Everything in single click</string>
+    <string name="ob_description_2">Add, generate, store, transfer, sync, export &amp; copy all your passwords in single click. Use autofill for quick action without opening app.</string>
+    <string name="register">Register</string>
+    <string name="already_have_an_account">Already have an account</string>
+    <string name="login">Login</string>
+</resources>

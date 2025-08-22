@@ -1,18 +1,13 @@
 package com.ab.an.presentation.onboarding
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ab.an.core.R
-import com.ab.an.core.utils.Constants.CONTROL_YOUR_SECURITY
-import com.ab.an.core.utils.Constants.EVERYTHING_IN_SINGLE_CLICK
-import com.ab.an.core.utils.Constants.FAST
-import com.ab.an.core.utils.Constants.FRICTIONLESS_SECURITY
-import com.ab.an.core.utils.Constants.OB_DESCRIPTION_1
-import com.ab.an.core.utils.Constants.OB_DESCRIPTION_2
-import com.ab.an.core.utils.Constants.PASS_BLOCK
 import com.ab.an.core.utils.Constants.SECURITY
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
+import com.ab.an.presentation.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,7 +16,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardViewModel @Inject constructor(private val appDataStoreRepository: AppSettingsDataStoreRepository) :
+class OnboardViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val appDataStoreRepository: AppSettingsDataStoreRepository
+) :
     ViewModel() {
 
     private val _state = MutableStateFlow(OnBoardState())
@@ -45,19 +43,19 @@ class OnboardViewModel @Inject constructor(private val appDataStoreRepository: A
     val onBoardDetails = listOf(
         OnBoardDetail(
             headLine = SECURITY,
-            title = CONTROL_YOUR_SECURITY,
-            description = OB_DESCRIPTION_1,
+            title = context.getString(R.string.control_your_security),
+            description = context.getString(R.string.ob_description_1),
             imageRes = R.drawable.shield_tick
         ),
         OnBoardDetail(
-            headLine = FAST,
-            title = EVERYTHING_IN_SINGLE_CLICK,
-            description = OB_DESCRIPTION_2,
+            headLine = context.getString(R.string.fast),
+            title = context.getString(R.string.everything_in_single_click),
+            description = context.getString(R.string.ob_description_2),
             imageRes = R.drawable.box
         ),
         OnBoardDetail(
-            title = PASS_BLOCK,
-            description = FRICTIONLESS_SECURITY,
+            title = context.getString(R.string.pass_block),
+            description = context.getString(R.string.frictionless_security),
             imageRes = R.drawable.obthree
         )
     )

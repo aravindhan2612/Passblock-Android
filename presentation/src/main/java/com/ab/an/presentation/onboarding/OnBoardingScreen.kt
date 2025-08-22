@@ -32,13 +32,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ab.an.core.utils.Constants
+import com.ab.an.presentation.R
 import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryOutlinedButton
 import com.ab.an.presentation.components.PrimaryText
@@ -53,7 +54,9 @@ fun OnboardingScreen(
     val pagerState =
         rememberPagerState(
             initialPage = 0,
-            pageCount = { onboardViewModel.onBoardDetails.size })
+            pageCount = {
+                onboardViewModel.onBoardDetails.size
+            })
 
     LaunchedEffect(Unit) {
         while (pagerState.currentPage < pagerState.pageCount - 1) {
@@ -120,7 +123,7 @@ fun OnboardingScreen(
                     onClick = {
                         onboardViewModel.setOnBoardShown(true)
                     },
-                    label = Constants.REGISTER,
+                    label = stringResource(R.string.register),
                     modifier = Modifier.fillMaxWidth(),
                     labelFontSize = 20.sp
                 )
@@ -129,7 +132,7 @@ fun OnboardingScreen(
                         onboardViewModel.setOnBoardShown(false)
                     },
                     modifier = Modifier.fillMaxWidth(),
-                    label = Constants.ALREADY_HAVE_ACCOUNT,
+                    label = stringResource(R.string.already_have_an_account),
                     labelFontSize = 18.sp
                 )
             }
