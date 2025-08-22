@@ -27,6 +27,7 @@ import androidx.compose.material.icons.outlined.CameraEnhance
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Phone
+import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
@@ -51,8 +52,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ab.an.core.utils.Constants
 import com.ab.an.core.utils.DateUtils
+import com.ab.an.presentation.components.ErrorDialog
 import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.PrimaryOutlinedButton
 import com.ab.an.presentation.components.PrimaryText
@@ -100,6 +101,18 @@ fun ViewProfileScreen(
                             Icon(
                                 imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                                 contentDescription = null,
+                            )
+                        }
+                    },
+                    actions = {
+                        IconButton(
+                            onClick = {
+                                viewModel.fetchUserFromApi()
+                            }
+                        ) {
+                            Icon(
+                                imageVector = Icons.Outlined.Sync,
+                                contentDescription = "Sync",
                             )
                         }
                     }
@@ -201,7 +214,7 @@ fun ViewProfileScreen(
                         ProfileEditOptionRow(
                             leadingIcon = Icons.Outlined.CameraEnhance,
                             label = "Profile picture",
-                            value = "Add a profile picture to your account",
+                            value = if (state.user.profilePicture.isNotBlank()) "Change or delete profile picture" else "Add a profile picture to your account",
                             trailingIcon = Icons.AutoMirrored.Outlined.ArrowForwardIos,
                             onClick = {
                                 navToAddOrEditProfilePicture()
@@ -212,7 +225,6 @@ fun ViewProfileScreen(
                             leadingIcon = Icons.Outlined.Password,
                             label = "Change password",
                             trailingIcon = Icons.AutoMirrored.Outlined.ArrowForwardIos,
-                            value = "Change your password",
                             onClick = {
                             }
                         )
@@ -247,6 +259,13 @@ fun ViewProfileScreen(
                 }
                 if (state.isLoading) {
                     LoadingIndicatorScreen()
+                }
+                if (!state.error.isNullOrBlank()) {
+                    state.error?.let {
+                        ErrorDialog(it) {
+                            navBack()
+                        }
+                    }
                 }
             }
         }
@@ -291,7 +310,7 @@ fun ProfileEditOptionRow(
     leadingIcon: ImageVector,
     leadingIconContentDescription: String? = null,
     label: String,
-    value: String,
+    value: String? = null,
     trailingIcon: ImageVector,
     trailingIconContentDescription: String? = null,
     onClick: () -> Unit
@@ -318,10 +337,12 @@ fun ProfileEditOptionRow(
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold
                 )
-                PrimaryText(
-                    text = value,
-                    fontSize = 12.sp
-                )
+                value?.let {
+                    PrimaryText(
+                        text = it,
+                        fontSize = 12.sp
+                    )
+                }
             }
         }
         Icon(

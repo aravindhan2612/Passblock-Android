@@ -1,12 +1,12 @@
 package com.ab.an.data.network.impl
 
-import android.util.Log
 import com.ab.an.core.utils.Resource
 import com.ab.an.data.mapper.toUser
 import com.ab.an.data.mapper.toUserDto
 import com.ab.an.data.network.api.UserApiService
+import com.ab.an.data.network.dto.AuthResponseDto
 import com.ab.an.domain.model.User
-import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.domain.repository.UserApiRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -18,7 +18,7 @@ import javax.inject.Inject
 
 class UserApiRepositoryImpl @Inject constructor(
     private val apiService: UserApiService,
-    private val appDataStoreRepository: AppDataStoreRepository
+    private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository
 ) : UserApiRepository, BaseRepositoryImpl() {
 
     override fun register(user: User): Flow<Resource<User>> = flow {
@@ -37,7 +37,7 @@ class UserApiRepositoryImpl @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    saveAppData(resource.data?.token)
+                    saveAppData(resource.data)
                     emit(Resource.Success(user))
                 }
             }
@@ -47,6 +47,7 @@ class UserApiRepositoryImpl @Inject constructor(
     override fun login(
         user: User
     ): Flow<Resource<User>> = flow {
+
         emit(Resource.Loading())
         getResult {
             // Map domain model to DTO for the API request
@@ -62,7 +63,7 @@ class UserApiRepositoryImpl @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    saveAppData(resource.data?.token)
+                    saveAppData(resource.data)
                     emit(Resource.Success(user))
                 }
             }
@@ -81,7 +82,9 @@ class UserApiRepositoryImpl @Inject constructor(
                 }
 
                 is Resource.Success -> {
-                    emit(Resource.Success(resource.data?.toUser()))
+                    val user = resource.data?.toUser()
+                    appSettingsDataStoreRepository.setUser(user)
+                    emit(Resource.Success(user))
                 }
             }
         }
@@ -93,11 +96,15 @@ class UserApiRepositoryImpl @Inject constructor(
                 is Resource.Error -> {
                     emit(Resource.Error(resource.message))
                 }
+
                 is Resource.Loading -> {
                     emit(Resource.Loading())
                 }
+
                 is Resource.Success -> {
-                    emit(Resource.Success(resource.data?.toUser()))
+                    val user = resource.data?.toUser()
+                    appSettingsDataStoreRepository.setUser(user)
+                    emit(Resource.Success(user))
                 }
             }
         }
@@ -105,17 +112,25 @@ class UserApiRepositoryImpl @Inject constructor(
 
     override fun uploadProfilePicture(profilePicture: ByteArray): Flow<Resource<User>> = flow {
         val requestFile = profilePicture.toRequestBody("image/*".toMediaTypeOrNull())
-        val body = MultipartBody.Part.createFormData("profilePicture", "${UUID.randomUUID()}.jpg", requestFile)
+        val body = MultipartBody.Part.createFormData(
+            "profilePicture",
+            "${UUID.randomUUID()}.jpg",
+            requestFile
+        )
         getResult { apiService.uploadProfilePicture(body) }.collect { resource ->
             when (resource) {
                 is Resource.Error -> {
                     emit(Resource.Error(resource.message))
                 }
+
                 is Resource.Loading -> {
                     emit(Resource.Loading())
                 }
+
                 is Resource.Success -> {
-                    emit(Resource.Success(resource.data?.toUser()))
+                    val user = resource.data?.toUser()
+                    appSettingsDataStoreRepository.setUser(user)
+                    emit(Resource.Success(user))
                 }
             }
         }
@@ -123,22 +138,27 @@ class UserApiRepositoryImpl @Inject constructor(
 
     override fun deleteProfilePicture(filename: String): Flow<Resource<User>> = flow {
         getResult { apiService.deleteProfilePicture(filename) }.collect { resource ->
-            when (resource){
+            when (resource) {
                 is Resource.Error -> {
                     emit(Resource.Error(resource.message))
                 }
+
                 is Resource.Loading -> {
                     emit(Resource.Loading())
                 }
+
                 is Resource.Success -> {
-                    emit(Resource.Success(resource.data?.toUser()))
+                    val user = resource.data?.toUser()
+                    appSettingsDataStoreRepository.setUser(user)
+                    emit(Resource.Success(user))
                 }
             }
         }
     }
 
-    private suspend fun saveAppData(token: String?) {
-        appDataStoreRepository.setUserLoggedIn(true)
-        appDataStoreRepository.saveJwtToken(token)
+    private suspend fun saveAppData(authResponseDto: AuthResponseDto?) {
+        appSettingsDataStoreRepository.setUserLoggedIn(true)
+        appSettingsDataStoreRepository.saveJwtToken(authResponseDto?.token)
+        appSettingsDataStoreRepository.setUser(authResponseDto?.user?.toUser())
     }
 }

@@ -1,7 +1,7 @@
 package com.ab.an.presentation.setting
 
 import androidx.lifecycle.ViewModel
-import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SettingViewModel @Inject constructor(
-    private val appDataStoreRepository: AppDataStoreRepository
+    private val preferenceDataStoreRepository: AppSettingsDataStoreRepository
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(SettingState())

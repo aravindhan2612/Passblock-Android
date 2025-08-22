@@ -2,7 +2,7 @@ package com.ab.an.presentation.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.presentation.navigation.RootRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
@@ -17,7 +17,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(private val appDataStoreRepository: AppDataStoreRepository) :
+class SplashViewModel @Inject constructor(
+    private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository,
+) :
     ViewModel() {
 
     private val _state = MutableStateFlow(SplashState())
@@ -33,9 +35,11 @@ class SplashViewModel @Inject constructor(private val appDataStoreRepository: Ap
         viewModelScope.launch {
             val appData = listOf(
                 async {
-                    appDataStoreRepository.getOnBoardShown().firstOrNull()
-                      },
-                async { appDataStoreRepository.isUserLoggedIn().firstOrNull() }
+                    appSettingsDataStoreRepository.getOnBoardShown().firstOrNull()
+                },
+                async {
+                    appSettingsDataStoreRepository.isUserLoggedIn().firstOrNull()
+                }
             ).awaitAll()
             when {
                 appData[1] == true && appData[0] == true -> {
@@ -53,6 +57,7 @@ class SplashViewModel @Inject constructor(private val appDataStoreRepository: Ap
                         )
                     }
                 }
+
                 else -> {
                     _state.update {
                         it.copy(

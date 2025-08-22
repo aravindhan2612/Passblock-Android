@@ -5,11 +5,10 @@ import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.domain.usecase.DeleteProfilePictureUseCase
-import com.ab.an.domain.usecase.GetCurrentUserUseCase
 import com.ab.an.domain.usecase.UploadProfilePictureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -19,7 +18,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddOrEditProfilePictureViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository,
     private val uploadProfilePictureUseCase: UploadProfilePictureUseCase,
     private val deleteProfilePictureUseCase: DeleteProfilePictureUseCase
 ) : ViewModel() {
@@ -35,31 +34,11 @@ class AddOrEditProfilePictureViewModel @Inject constructor(
 
     private fun fetchUser() {
         viewModelScope.launch {
-            getCurrentUserUseCase().collect { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            error = result.message
-                        )
-                    }
-
-                    is Resource.Loading -> {
-                        _state.value = _state.value.copy(
-                            isLoading = true
-                        )
-                    }
-
-                    is Resource.Success -> {
-                        result.data?.let {
-                            _state.value = _state.value.copy(
-                                isLoading = false,
-                                fullName = it.fullName,
-                                profilePicture = it.profilePicture,
-                            )
-                        }
-                    }
-                }
+            appSettingsDataStoreRepository.getUser().collect {
+                _state.value = _state.value.copy(
+                    fullName = it.fullName,
+                    profilePicture = it.profilePicture
+                )
             }
         }
     }

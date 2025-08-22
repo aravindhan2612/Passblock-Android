@@ -11,7 +11,7 @@ import com.ab.an.core.utils.Constants.OB_DESCRIPTION_1
 import com.ab.an.core.utils.Constants.OB_DESCRIPTION_2
 import com.ab.an.core.utils.Constants.PASS_BLOCK
 import com.ab.an.core.utils.Constants.SECURITY
-import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class OnboardViewModel @Inject constructor(private val appDataStoreRepository: AppDataStoreRepository) :
+class OnboardViewModel @Inject constructor(private val appDataStoreRepository: AppSettingsDataStoreRepository) :
     ViewModel() {
 
     private val _state = MutableStateFlow(OnBoardState())

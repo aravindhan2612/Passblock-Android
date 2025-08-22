@@ -7,7 +7,7 @@ import com.ab.an.core.utils.CommonUtils.getLocaleRegion
 import com.ab.an.core.utils.CommonUtils.getNetworkRegion
 import com.ab.an.core.utils.CommonUtils.getSimRegion
 import com.ab.an.core.utils.Resource
-import com.ab.an.domain.usecase.GetCurrentUserUseCase
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.domain.usecase.UpdateUserUseCase
 import com.ab.an.domain.usecase.ValidateEmailUseCase
 import com.ab.an.domain.usecase.ValidatePhoneNumberUseCase
@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class UpdateContactInfoViewModel @Inject constructor(
-    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository,
     private val updateUserUseCase: UpdateUserUseCase,
     private val validatePhoneNumberUseCase: ValidatePhoneNumberUseCase,
     private val validateUsernameUseCase: ValidateUsernameUseCase,
@@ -41,23 +41,10 @@ class UpdateContactInfoViewModel @Inject constructor(
 
     private fun fetchUser() {
         viewModelScope.launch {
-            getCurrentUserUseCase.invoke().collect { result ->
-                when (result) {
-                    is Resource.Loading -> {
-                        _state.value = state.value.copy(isLoading = true)
-                    }
-
-                    is Resource.Success -> {
-                        result.data?.let {
-                            _state.value = state.value.copy(isLoading = false, user = it)
-                        }
-                    }
-
-                    is Resource.Error -> {
-                        _state.value =
-                            state.value.copy(isLoading = false, errorMessage = result.message)
-                    }
-                }
+            appSettingsDataStoreRepository.getUser().collect { user ->
+                _state.value = _state.value.copy(
+                    user = user
+                )
             }
         }
     }
@@ -110,7 +97,7 @@ class UpdateContactInfoViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            updateUserUseCase(_state.value.user).collect { result ->
+            updateUserUseCase.invoke(_state.value.user).collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _state.value = state.value.copy(isLoading = true)

@@ -6,7 +6,7 @@ import com.ab.an.data.network.api.PasswordApiService
 import com.ab.an.data.network.api.UserApiService
 import com.ab.an.data.network.impl.PasswordRepositoryImpl
 import com.ab.an.data.network.impl.UserApiRepositoryImpl
-import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.domain.repository.PasswordRepository
 import com.ab.an.domain.repository.UserApiRepository
 import com.google.gson.Gson
@@ -67,7 +67,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideCustomInterceptor(appDataStoreRepository: AppDataStoreRepository, coroutineScope: CoroutineScope): CustomInterceptor {
+    fun provideCustomInterceptor(appDataStoreRepository: AppSettingsDataStoreRepository, coroutineScope: CoroutineScope): CustomInterceptor {
         return CustomInterceptor(appDataStoreRepository, coroutineScope)
     }
 
@@ -140,7 +140,7 @@ object NetworkModule {
     }
     @Provides
     @Singleton
-    fun provideUserApiRepository(userApiService: UserApiService, appDataStore: AppDataStoreRepository): UserApiRepository {
+    fun provideUserApiRepository(userApiService: UserApiService, appDataStore: AppSettingsDataStoreRepository): UserApiRepository {
         return UserApiRepositoryImpl(userApiService, appDataStore)
     }
 

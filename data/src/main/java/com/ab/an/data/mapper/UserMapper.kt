@@ -6,6 +6,7 @@ import com.ab.an.domain.model.User
 
 fun UserDto.toUser(): User {
     return User(
+        id = id ?: "",
         email = email ?: "",
         fullName = fullName ?: "",
         password = password ?: "",
@@ -17,6 +18,7 @@ fun UserDto.toUser(): User {
 
 fun User.toUserDto(): UserDto {
     return UserDto(
+        id = id,
         email = email,
         fullName = fullName,
         password = password,

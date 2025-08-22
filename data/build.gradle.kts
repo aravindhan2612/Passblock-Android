@@ -50,7 +50,7 @@ dependencies {
     implementation(projects.domain)
     implementation(projects.core)
 
-    implementation(libs.datastore.preferences)
+    implementation(libs.datastore)
 
     implementation(libs.hilt.android)
     ksp(libs.hilt.android.compiler)
@@ -61,5 +61,6 @@ dependencies {
     implementation(libs.logging.interceptor)
 
     implementation(libs.google.fonts)
+    implementation(libs.serialization.json)
 
 }

@@ -1,6 +1,6 @@
 package com.ab.an.data.network
 
-import com.ab.an.domain.repository.AppDataStoreRepository
+import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.runBlocking
@@ -9,7 +9,7 @@ import okhttp3.Response
 import javax.inject.Inject
 
 class CustomInterceptor @Inject constructor(
-    private val appDataStoreRepository: AppDataStoreRepository,
+    private val appDataStoreRepository: AppSettingsDataStoreRepository,
     private val coroutineScope: CoroutineScope
 ) : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
