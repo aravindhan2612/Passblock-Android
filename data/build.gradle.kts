@@ -63,4 +63,8 @@ dependencies {
     implementation(libs.google.fonts)
     implementation(libs.serialization.json)
 
+    testImplementation(libs.mockk)
+    testImplementation(libs.turbine)
+    testImplementation(libs.coroutine.test)
+
 }
