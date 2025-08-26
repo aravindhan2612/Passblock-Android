@@ -48,7 +48,6 @@ class UserApiRepositoryImpl @Inject constructor(
         user: User
     ): Flow<Resource<User>> = flow {
 
-        emit(Resource.Loading())
         getResult {
             // Map domain model to DTO for the API request
             apiService.login(user.toUserDto().copy(fullName = null))

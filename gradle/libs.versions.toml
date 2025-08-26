@@ -24,6 +24,9 @@ loggingInterceptorVersion = "4.12.0"
 google-fonts-version = "1.8.1"
 coil = "3.3.0"
 libphonenumberVersion = "8.13.20"
+mockkVersion = "1.14.5"
+turbineVersion = "1.2.1"
+coroutineTestVersion = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,6 +70,10 @@ coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" 
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
 
 libphonenuumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref ="libphonenumberVersion"}
+
+mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion"}
+turbine = { module = "app.cash.turbine:turbine", version.ref = "turbineVersion" }
+coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineTestVersion" }
 
 
 [plugins]
