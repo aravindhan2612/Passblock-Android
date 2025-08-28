@@ -13,21 +13,19 @@ import androidx.compose.ui.unit.TextUnit
 import coil3.compose.AsyncImagePainter
 import coil3.compose.LocalPlatformContext
 import coil3.compose.rememberAsyncImagePainter
-import coil3.request.CachePolicy
 import coil3.request.ImageRequest
-import com.ab.an.core.utils.Constants
 
 @Composable
-fun ProfilePictureAsyncImage(
-    modifier : Modifier = Modifier,
-    fileName: String? = null,
+fun CustomAsyncImage(
+    url: String,
+    modifier: Modifier = Modifier,
     label: String,
     textColor: Color = MaterialTheme.colorScheme.secondary,
     fontSize: TextUnit = TextUnit.Unspecified
 ) {
-    val painter =rememberAsyncImagePainter(
+    val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(LocalPlatformContext.current)
-            .data("${Constants.E_BASE_URL}uploads/${fileName}")
+            .data(url)
             .build(),
     )
     val state by painter.state.collectAsState()
@@ -36,11 +34,12 @@ fun ProfilePictureAsyncImage(
         is AsyncImagePainter.State.Empty,
         is AsyncImagePainter.State.Loading -> {
             CircularProgressIndicator(
-                modifier =  modifier
+                modifier = modifier
             )
         }
+
         is AsyncImagePainter.State.Success -> {
-            if(state.painter != null) {
+            if (state.painter != null) {
                 Image(
                     painter = painter,
                     contentDescription = "Profile Picture",
@@ -57,6 +56,7 @@ fun ProfilePictureAsyncImage(
                 )
             }
         }
+
         is AsyncImagePainter.State.Error -> {
             // Show some error UI.
             UserInitialsAvatar(

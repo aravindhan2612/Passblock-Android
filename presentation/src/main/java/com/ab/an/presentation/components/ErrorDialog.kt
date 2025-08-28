@@ -6,7 +6,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun ErrorDialog(message: String, onClose: () -> Unit) {
+fun ErrorDialog(message: String, onClose: () -> Unit = {}) {
     AlertDialog(
         onDismissRequest = {},
         title = { Text("Error") },

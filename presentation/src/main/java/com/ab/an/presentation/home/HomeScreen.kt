@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ab.an.presentation.components.FavIconAsyncImage
+import com.ab.an.presentation.components.CustomAsyncImage
 import com.ab.an.presentation.components.OnPrimaryText
 import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryText
@@ -148,8 +148,10 @@ fun ListItem(
             }
             .padding(12.dp)
     ) {
-        FavIconAsyncImage(
-            model = item.password.faviconUrl
+        CustomAsyncImage(
+            label = item.password.name,
+            url = item.password.faviconUrl,
+            modifier = Modifier.size(50.dp)
         )
         Column(
             modifier = Modifier

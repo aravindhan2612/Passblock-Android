@@ -1,9 +1,5 @@
 package com.ab.an.presentation.updateContactInfo
 
-import android.net.Uri
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -25,16 +21,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import com.ab.an.core.R
-import com.ab.an.core.utils.CommonUtils
-import com.ab.an.presentation.components.ProfilePictureAsyncImage
-import kotlinx.coroutines.launch
-import java.io.InputStream
+import com.ab.an.core.utils.Constants
+import com.ab.an.presentation.components.CustomAsyncImage
 
 @Composable
 fun ProfilePictureEditor(
@@ -55,9 +45,9 @@ fun ProfilePictureEditor(
                     .padding(),
                 shape = CircleShape
             ) {
-                ProfilePictureAsyncImage(
+                CustomAsyncImage(
                     label = fullName,
-                    fileName = profilePicture,
+                    url = "${Constants.E_BASE_URL}uploads/${profilePicture}",
                     modifier = Modifier.fillMaxSize()
                 )
             }

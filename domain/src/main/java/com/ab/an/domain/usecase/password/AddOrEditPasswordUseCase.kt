@@ -1,4 +1,4 @@
-package com.ab.an.domain.usecase
+package com.ab.an.domain.usecase.password
 
 import com.ab.an.domain.model.Password
 import com.ab.an.domain.repository.PasswordRepository

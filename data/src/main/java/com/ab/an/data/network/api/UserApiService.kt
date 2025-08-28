@@ -1,6 +1,7 @@
 package com.ab.an.data.network.api
 
 import com.ab.an.data.network.dto.AuthResponseDto
+import com.ab.an.data.network.dto.UpdatePasswordDto
 import com.ab.an.data.network.dto.UserDto
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -41,5 +42,11 @@ interface UserApiService {
     @DELETE("uploads/{filename}")
     suspend fun deleteProfilePicture(
         @Path("filename") filename: String
+    ): Response<UserDto>
+
+    @Headers("X-Require-Token: true")
+    @POST("api/user/updatePassword")
+    suspend fun updateUserPassword(
+        @Body updatePasswordDto: UpdatePasswordDto
     ): Response<UserDto>
 }
