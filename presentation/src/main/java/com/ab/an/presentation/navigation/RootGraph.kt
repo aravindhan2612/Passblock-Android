@@ -9,6 +9,7 @@ import androidx.navigation.toRoute
 import com.ab.an.presentation.addOrEditPassword.AddOrEditPasswordScreen
 import com.ab.an.presentation.addOrEditProfilePicture.AddOrEditPictureScreen
 import com.ab.an.presentation.auth.AuthScreen
+import com.ab.an.presentation.changePassword.ChangePasswordScreen
 import com.ab.an.presentation.onboarding.OnboardingScreen
 import com.ab.an.presentation.profile.ViewProfileScreen
 import com.ab.an.presentation.splash.SplashScreen
@@ -100,6 +101,9 @@ fun RootGraph(
                 },
                 navToAddOrEditProfilePicture = {
                     navController.navigate(RootRoute.AddOrEditProfilePicture)
+                },
+                changePassword = {
+                    navController.navigate(RootRoute.ChangePassword)
                 }
             )
         }
@@ -119,6 +123,11 @@ fun RootGraph(
                     navController.popBackStack()
                 }
             )
+        }
+        composable<RootRoute.ChangePassword> {
+            ChangePasswordScreen(navBack = {
+                navController.popBackStack()
+            })
         }
     }
 }

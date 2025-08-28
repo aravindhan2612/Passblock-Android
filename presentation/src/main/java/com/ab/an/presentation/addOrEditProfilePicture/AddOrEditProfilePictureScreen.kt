@@ -19,10 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
-import androidx.compose.material.icons.outlined.AddAPhoto
 import androidx.compose.material.icons.outlined.AddPhotoAlternate
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -37,17 +34,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.utils.Constants
+import com.ab.an.presentation.components.CustomAsyncImage
 import com.ab.an.presentation.components.ErrorDialog
 import com.ab.an.presentation.components.LeadingIconButton
 import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.PrimaryText
-import com.ab.an.presentation.components.ProfilePictureAsyncImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -134,9 +130,9 @@ fun AddOrEditPictureScreen(
                                     .padding(),
                                 shape = CircleShape
                             ) {
-                                ProfilePictureAsyncImage(
+                                CustomAsyncImage(
                                     label = state.fullName,
-                                    fileName =  state.profilePicture,
+                                    url =  "${Constants.E_BASE_URL}uploads/${state.profilePicture}",
                                     modifier = Modifier.fillMaxSize(),
                                     fontSize = 40.sp
                                 )

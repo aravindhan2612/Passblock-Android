@@ -5,6 +5,7 @@ import com.ab.an.data.mapper.toUser
 import com.ab.an.data.mapper.toUserDto
 import com.ab.an.data.network.api.UserApiService
 import com.ab.an.data.network.dto.AuthResponseDto
+import com.ab.an.data.network.dto.UpdatePasswordDto
 import com.ab.an.domain.model.User
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.domain.repository.UserApiRepository
@@ -153,6 +154,25 @@ class UserApiRepositoryImpl @Inject constructor(
                 }
             }
         }
+    }
+
+    override fun updatePassword(currentPassword: String,newPassword: String): Flow<Resource<User>> = flow {
+        getResult { apiService.updateUserPassword(UpdatePasswordDto(newPassword = newPassword, currentPassword = currentPassword)) }
+            .collect { response ->
+                when(response) {
+                    is Resource.Error -> {
+                        emit(Resource.Error(response.message))
+                    }
+                    is Resource.Loading -> {
+                        emit(Resource.Loading())
+                    }
+                    is Resource.Success -> {
+                        val user = response.data?.toUser()
+                        appSettingsDataStoreRepository.setUser(user)
+                        emit(Resource.Success(user))
+                    }
+                }
+            }
     }
 
     private suspend fun saveAppData(authResponseDto: AuthResponseDto?) {
