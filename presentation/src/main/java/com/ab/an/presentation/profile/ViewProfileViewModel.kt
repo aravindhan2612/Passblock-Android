@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.model.User
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
-import com.ab.an.domain.usecase.GetCurrentUserUseCase
+import com.ab.an.domain.usecase.user.GetCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow

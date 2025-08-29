@@ -5,9 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.model.Password
 import com.ab.an.domain.usecase.password.AddOrEditPasswordUseCase
-import com.ab.an.domain.usecase.GetPasswordUseCase
-import com.ab.an.domain.usecase.ValidateLinkUseCase
-import com.ab.an.domain.usecase.ValidateNameUseCase
+import com.ab.an.domain.usecase.password.GetPasswordUseCase
+import com.ab.an.domain.usecase.validate.ValidateLinkUseCase
+import com.ab.an.domain.usecase.validate.ValidateNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
