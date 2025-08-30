@@ -8,10 +8,10 @@ import com.ab.an.core.utils.CommonUtils.getNetworkRegion
 import com.ab.an.core.utils.CommonUtils.getSimRegion
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
-import com.ab.an.domain.usecase.UpdateUserUseCase
-import com.ab.an.domain.usecase.ValidateEmailUseCase
-import com.ab.an.domain.usecase.ValidatePhoneNumberUseCase
-import com.ab.an.domain.usecase.ValidateUsernameUseCase
+import com.ab.an.domain.usecase.user.UpdateUserUseCase
+import com.ab.an.domain.usecase.validate.ValidateEmailUseCase
+import com.ab.an.domain.usecase.validate.ValidatePhoneNumberUseCase
+import com.ab.an.domain.usecase.validate.ValidateUsernameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

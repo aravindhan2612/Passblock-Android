@@ -6,9 +6,9 @@ import kotlinx.coroutines.flow.Flow
 
 interface PasswordRepository {
 
-     fun getPasswords(): Flow<Resource<List<Password>>>
-     fun getPassword(id: String): Flow<Resource<Password>>
-     fun addPassword(password: Password): Flow<Resource<Password>>
-     fun updatePassword(password: Password): Flow<Resource<Password>>
-     fun deletePassword(id: String): Flow<Resource<Password>>
+    fun getPasswords(userId: String): Flow<List<Password>>
+    fun fetchPasswords(): Flow<Resource<Boolean>>
+    fun getPassword(id: String): Flow<Password?>
+    fun addOrUpdatePassword(isEdit: Boolean, password: Password): Flow<Resource<Password>>
+    fun deletePassword(id: String): Flow<Resource<Password>>
 }

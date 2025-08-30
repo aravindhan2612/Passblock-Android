@@ -1,9 +1,10 @@
-package com.ab.an.presentation.splash
+package com.ab.an.passblock
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.presentation.navigation.RootRoute
+import com.ab.an.passblock.SplashState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -17,18 +18,16 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SplashViewModel @Inject constructor(
-    private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository,
-) :
-    ViewModel() {
-
+class MainActivityViewModel @Inject constructor(
+    private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository
+) : ViewModel(){
     private val _state = MutableStateFlow(SplashState())
     val state = _state.onStart {
         loadData()
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
-        null
+        SplashState()
     )
 
     private fun loadData() {
@@ -45,7 +44,8 @@ class SplashViewModel @Inject constructor(
                 appData[1] == true && appData[0] == true -> {
                     _state.update {
                         it.copy(
-                            route = RootRoute.BottomBarGraph
+                            route = RootRoute.BottomBarGraph,
+                            isLoading = false
                         )
                     }
                 }
@@ -53,7 +53,8 @@ class SplashViewModel @Inject constructor(
                 appData[0] == true -> {
                     _state.update {
                         it.copy(
-                            route = RootRoute.Auth()
+                            route = RootRoute.Auth(),
+                            isLoading = false
                         )
                     }
                 }
@@ -61,12 +62,12 @@ class SplashViewModel @Inject constructor(
                 else -> {
                     _state.update {
                         it.copy(
-                            route = RootRoute.Onboarding
+                            route = RootRoute.Onboarding,
+                            isLoading = false
                         )
                     }
                 }
             }
         }
     }
-
 }

@@ -2,13 +2,16 @@ package com.ab.an.data.datastore.repositoryImpl
 
 import androidx.datastore.core.DataStore
 import app.cash.turbine.test
+import com.ab.an.data.database.PassblockDatabase
 import com.ab.an.data.datastore.serializer.AppSettingsEntity
+import com.ab.an.data.impl.AppSettingsDataStoreImpl
 import com.ab.an.data.mapper.toAppSettings
 import com.ab.an.data.mapper.toUser
 import com.ab.an.data.network.dto.UserDto
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
+import io.mockk.impl.annotations.MockK
 import io.mockk.impl.annotations.RelaxedMockK
 import io.mockk.junit4.MockKRule
 import io.mockk.slot
@@ -29,11 +32,14 @@ class AppSettingsDataStoreImplTest {
     private lateinit var appSettingsDataStoreImpl: AppSettingsDataStoreImpl
     @RelaxedMockK
     private lateinit var appDataStore: DataStore<AppSettingsEntity>
+
+    @MockK
+    private lateinit var passblockDatabase: PassblockDatabase
     private lateinit var mockAppSettingsEntity: AppSettingsEntity
 
     @Before
     fun setup() {
-        appSettingsDataStoreImpl = AppSettingsDataStoreImpl(appDataStore)
+        appSettingsDataStoreImpl = AppSettingsDataStoreImpl(appDataStore, passblockDatabase)
         mockAppSettingsEntity = AppSettingsEntity(
             isOnBoardingShown = true,
             user = UserDto(

@@ -3,9 +3,9 @@ package com.ab.an.presentation.changePassword
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
-import com.ab.an.domain.usecase.UpdateUserPasswordUseCase
-import com.ab.an.domain.usecase.ValidateNameUseCase
-import com.ab.an.domain.usecase.ValidatePasswordUseCase
+import com.ab.an.domain.usecase.user.UpdateUserPasswordUseCase
+import com.ab.an.domain.usecase.validate.ValidateNameUseCase
+import com.ab.an.domain.usecase.validate.ValidatePasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

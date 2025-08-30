@@ -3,8 +3,8 @@ package com.ab.an.presentation.viewPassword
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
+import com.ab.an.domain.repository.PasswordRepository
 import com.ab.an.domain.usecase.password.DeletePasswordUseCase
-import com.ab.an.domain.usecase.GetPasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ViewPasswordViewModel @Inject constructor(
-    private val getPasswordUseCase: GetPasswordUseCase,
+    private val passwordRepository: PasswordRepository,
     private val deletePasswordUseCase: DeletePasswordUseCase,
 ) : ViewModel() {
 
@@ -82,31 +82,17 @@ class ViewPasswordViewModel @Inject constructor(
 
     private fun fetchPassword(id: String) {
         viewModelScope.launch {
-            getPasswordUseCase(id).collect { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            error = result.message
-                        )
-                    }
-
-                    is Resource.Loading -> {
-                        _state.value = _state.value.copy(
-                            isLoading = true,
-                            error = null
-                        )
-                    }
-
-                    is Resource.Success -> {
-                        result.data?.let {
-                            _state.value = _state.value.copy(
-                                password = it,
-                                isLoading = false,
-                                error = null
-                            )
-                        }
-                    }
+            _state.value = _state.value.copy(
+                isLoading = true,
+                error = null
+            )
+            passwordRepository.getPassword(id).collect { password ->
+                password?.let {
+                    _state.value = _state.value.copy(
+                        password = it,
+                        isLoading = false,
+                        error = null
+                    )
                 }
             }
         }

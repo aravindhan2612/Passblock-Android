@@ -4,10 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.model.Password
-import com.ab.an.domain.usecase.password.AddOrEditPasswordUseCase
-import com.ab.an.domain.usecase.GetPasswordUseCase
-import com.ab.an.domain.usecase.ValidateLinkUseCase
-import com.ab.an.domain.usecase.ValidateNameUseCase
+import com.ab.an.domain.repository.PasswordRepository
+import com.ab.an.domain.usecase.validate.ValidateLinkUseCase
+import com.ab.an.domain.usecase.validate.ValidateNameUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,17 +15,18 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddOrEditPasswordViewModel @Inject constructor(
+    private val passwordRepository: PasswordRepository,
     private val validateNameUseCase: ValidateNameUseCase,
     private val validateLinkUseCase: ValidateLinkUseCase,
-    private val addPasswordUseCase: AddOrEditPasswordUseCase,
-    private val getPasswordUseCase: GetPasswordUseCase
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(AddOrEditPasswordState(
-        passwordEntity = Password(
-            tag = tags.last()
+    private val _state = MutableStateFlow(
+        AddOrEditPasswordState(
+            passwordEntity = Password(
+                tag = tags.last()
+            )
         )
-    ))
+    )
     val state = _state.asStateFlow()
 
     fun onIntent(intent: AddOrEditPasswordIntent) {
@@ -104,14 +104,15 @@ class AddOrEditPasswordViewModel @Inject constructor(
             return
         }
         viewModelScope.launch {
-            addPasswordUseCase(isEdit = isEditMode,_state.value.passwordEntity).collect { result ->
-                when(result) {
+            passwordRepository.addOrUpdatePassword(isEdit = isEditMode, _state.value.passwordEntity).collect { result ->
+                when (result) {
                     is Resource.Error<Password> -> {
                         _state.value = _state.value.copy(
                             isLoading = false,
                             errorMessage = result.message
                         )
                     }
+
                     is Resource.Loading<Password> -> {
                         _state.value = _state.value.copy(
                             isLoading = true,
@@ -119,6 +120,7 @@ class AddOrEditPasswordViewModel @Inject constructor(
                             success = false
                         )
                     }
+
                     is Resource.Success<Password> -> {
                         _state.value = _state.value.copy(
                             isLoading = false,
@@ -132,31 +134,17 @@ class AddOrEditPasswordViewModel @Inject constructor(
 
     private fun fetchPassword(id: String) {
         viewModelScope.launch {
-            getPasswordUseCase(id).collect { result ->
-                when (result) {
-                    is Resource.Error -> {
-                        _state.value = _state.value.copy(
-                            isLoading = false,
-                            fetchPasswordError = result.message
-                        )
-                    }
-
-                    is Resource.Loading -> {
-                        _state.value = _state.value.copy(
-                            isLoading = true,
-                            fetchPasswordError = null
-                        )
-                    }
-
-                    is Resource.Success -> {
-                        result.data?.let {
-                            _state.value = _state.value.copy(
-                                passwordEntity = it,
-                                isLoading = false,
-                                fetchPasswordError = null
-                            )
-                        }
-                    }
+            _state.value = _state.value.copy(
+                isLoading = true,
+                fetchPasswordError = null
+            )
+            passwordRepository.getPassword(id).collect { password ->
+                password?.let {
+                    _state.value = _state.value.copy(
+                        passwordEntity = it,
+                        isLoading = false,
+                        fetchPasswordError = null
+                    )
                 }
             }
         }

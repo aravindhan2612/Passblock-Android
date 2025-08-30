@@ -1,4 +1,4 @@
-package com.ab.an.domain.usecase
+package com.ab.an.domain.usecase.user
 
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.model.User

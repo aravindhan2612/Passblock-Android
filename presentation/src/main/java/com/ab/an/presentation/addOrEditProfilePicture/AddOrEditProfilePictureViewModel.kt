@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
-import com.ab.an.domain.usecase.DeleteProfilePictureUseCase
-import com.ab.an.domain.usecase.UploadProfilePictureUseCase
+import com.ab.an.domain.usecase.user.DeleteProfilePictureUseCase
+import com.ab.an.domain.usecase.user.UploadProfilePictureUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

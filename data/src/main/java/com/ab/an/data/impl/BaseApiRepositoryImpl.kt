@@ -1,4 +1,4 @@
-package com.ab.an.data.network.impl
+package com.ab.an.data.impl
 
 import com.ab.an.core.utils.Resource
 import com.ab.an.data.utils.ApiHelper
@@ -8,7 +8,7 @@ import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
 
-abstract class BaseRepositoryImpl {
+abstract class BaseApiRepositoryImpl {
 
     protected suspend fun <T> getResult(call: suspend () -> Response<T>): Flow<Resource<T>> = flow {
         emit(Resource.Loading())

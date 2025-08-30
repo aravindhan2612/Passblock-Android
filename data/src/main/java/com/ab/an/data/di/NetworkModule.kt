@@ -4,11 +4,7 @@ import com.ab.an.core.utils.Constants
 import com.ab.an.data.network.CustomInterceptor
 import com.ab.an.data.network.api.PasswordApiService
 import com.ab.an.data.network.api.UserApiService
-import com.ab.an.data.network.impl.PasswordRepositoryImpl
-import com.ab.an.data.network.impl.UserApiRepositoryImpl
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
-import com.ab.an.domain.repository.PasswordRepository
-import com.ab.an.domain.repository.UserApiRepository
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -126,7 +122,6 @@ object NetworkModule {
             .build()
     }
 
-
     @Provides
     @Singleton
     fun provideUserApiService(retrofit: Retrofit): UserApiService {
@@ -137,16 +132,5 @@ object NetworkModule {
     @Singleton
     fun providePasswordApiService(retrofit: Retrofit): PasswordApiService {
         return retrofit.create(PasswordApiService::class.java)
-    }
-    @Provides
-    @Singleton
-    fun provideUserApiRepository(userApiService: UserApiService, appDataStore: AppSettingsDataStoreRepository): UserApiRepository {
-        return UserApiRepositoryImpl(userApiService, appDataStore)
-    }
-
-    @Provides
-    @Singleton
-    fun providePasswordRepository(passwordApiService: PasswordApiService): PasswordRepository {
-        return PasswordRepositoryImpl(passwordApiService)
     }
 }

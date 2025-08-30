@@ -18,5 +18,7 @@ data class PasswordDto(
     @SerializedName("websiteLink")
     val websiteLink: String? = "",
     @SerializedName("faviconUrl")
-    val faviconUrl : String? = ""
+    val faviconUrl : String? = "",
+    @SerializedName("userId")
+    val userId: String
 )

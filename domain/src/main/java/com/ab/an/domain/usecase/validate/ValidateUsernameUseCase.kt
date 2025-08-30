@@ -1,4 +1,4 @@
-package com.ab.an.domain.usecase
+package com.ab.an.domain.usecase.validate
 
 import javax.inject.Inject
 

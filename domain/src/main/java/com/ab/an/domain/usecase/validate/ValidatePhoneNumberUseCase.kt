@@ -1,4 +1,4 @@
-package com.ab.an.domain.usecase
+package com.ab.an.domain.usecase.validate
 
 import com.google.i18n.phonenumbers.NumberParseException
 import com.google.i18n.phonenumbers.PhoneNumberUtil

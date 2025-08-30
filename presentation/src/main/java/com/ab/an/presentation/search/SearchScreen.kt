@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import com.ab.an.presentation.components.PrimaryText
 
 
 @Composable
@@ -17,8 +16,6 @@ fun SearchScreen(innerPadding: PaddingValues) {
             .padding(innerPadding)
             .fillMaxSize()
     ) {
-        PrimaryText(
-            text = "Search screen"
-        )
+
     }
 }
