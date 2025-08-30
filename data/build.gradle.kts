@@ -67,4 +67,10 @@ dependencies {
     testImplementation(libs.turbine)
     testImplementation(libs.coroutine.test)
 
+    implementation(libs.room.runtime)
+    implementation(libs.room.ktx)
+    ksp(libs.room.compiler)
+    androidTestImplementation(libs.room.testing)
+    implementation(libs.room.paging)
+
 }

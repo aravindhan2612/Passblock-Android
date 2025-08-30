@@ -5,8 +5,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class RootRoute()  {
     @Serializable
-    object Splash : RootRoute()
-    @Serializable
     object Onboarding : RootRoute()
     @Serializable
     data class Auth(val isRegister: Boolean = false) : RootRoute()

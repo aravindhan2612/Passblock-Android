@@ -8,5 +8,5 @@ data class Password(
     val link: String = "",
     val password: String = "",
     val tag: String = "",
-    val faviconUrl : String = ""
+    val faviconUrl : String = "",
 )

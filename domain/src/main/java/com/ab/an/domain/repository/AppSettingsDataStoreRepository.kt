@@ -20,4 +20,6 @@ interface AppSettingsDataStoreRepository {
     suspend fun setUser(user: User?)
 
     fun getAppSettings(): Flow<AppSettings>
+
+    fun logout(): Flow<Boolean>
 }

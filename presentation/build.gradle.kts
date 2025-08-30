@@ -65,7 +65,6 @@ dependencies {
     ksp(libs.hilt.android.compiler)
     implementation(libs.hilt.navigation.compose)
 
-    implementation(libs.lottie.compose)
     implementation(libs.google.fonts)
 
     implementation(libs.coil.compose)

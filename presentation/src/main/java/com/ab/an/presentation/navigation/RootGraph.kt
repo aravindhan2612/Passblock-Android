@@ -12,29 +12,20 @@ import com.ab.an.presentation.auth.AuthScreen
 import com.ab.an.presentation.changePassword.ChangePasswordScreen
 import com.ab.an.presentation.onboarding.OnboardingScreen
 import com.ab.an.presentation.profile.ViewProfileScreen
-import com.ab.an.presentation.splash.SplashScreen
 import com.ab.an.presentation.updateContactInfo.UpdateContactInfoScreen
 import com.ab.an.presentation.viewPassword.ViewPasswordScreen
 
 
 @Composable
 fun RootGraph(
-    rootViewModel: RootViewModel = hiltViewModel()
+    rootViewModel: RootViewModel = hiltViewModel(),
+    startDestination: RootRoute
 ) {
     val navController = rememberNavController()
     NavHost(
         navController = navController,
-        startDestination = RootRoute.Splash,
+        startDestination = startDestination,
     ) {
-        composable<RootRoute.Splash> {
-            SplashScreen(onComplete = {
-                navController.navigate(it) {
-                    popUpTo(RootRoute.Splash) {
-                        inclusive = true
-                    }
-                }
-            })
-        }
         composable<RootRoute.Onboarding> {
             OnboardingScreen(
                 navToAuth = {

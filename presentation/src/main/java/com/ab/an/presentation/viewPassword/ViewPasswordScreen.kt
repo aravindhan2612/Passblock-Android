@@ -90,7 +90,7 @@ fun ViewPasswordScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-                    PrimaryText(text = "Details")
+                    Text(text = "Details")
                 },
                 navigationIcon = {
                     IconButton(

@@ -1,6 +1,7 @@
-package com.ab.an.data.datastore.repositoryImpl
+package com.ab.an.data.impl
 
 import androidx.datastore.core.DataStore
+import com.ab.an.data.database.PassblockDatabase
 import com.ab.an.data.datastore.serializer.AppSettingsEntity
 import com.ab.an.data.mapper.toAppSettings
 import com.ab.an.data.mapper.toUser
@@ -8,10 +9,18 @@ import com.ab.an.data.mapper.toUserDto
 import com.ab.an.domain.model.AppSettings
 import com.ab.an.domain.model.User
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
-class AppSettingsDataStoreImpl(private val dataStore: DataStore<AppSettingsEntity>) :
+class AppSettingsDataStoreImpl(
+    private val dataStore: DataStore<AppSettingsEntity>,
+    private val passblockDatabase: PassblockDatabase
+) :
     AppSettingsDataStoreRepository {
 
 
@@ -46,6 +55,21 @@ class AppSettingsDataStoreImpl(private val dataStore: DataStore<AppSettingsEntit
         return dataStore.data.map { it.toAppSettings() }
     }
 
+    override fun logout(): Flow<Boolean> = callbackFlow {
+        dataStore.updateData { store ->
+            store.copy(
+                user = User().toUserDto(),
+                jwtKey = "",
+                isUserLoggedIn = false
+            )
+        }
+        launch(Dispatchers.IO) {
+            async { passblockDatabase.clearAllTables() }.await()
+            trySend(true)
+        }
+        awaitClose {}
+    }
+
     override suspend fun setUserLoggedIn(value: Boolean) {
         dataStore.updateData {
             it.copy(
@@ -60,13 +84,12 @@ class AppSettingsDataStoreImpl(private val dataStore: DataStore<AppSettingsEntit
 
     override suspend fun saveJwtToken(token: String?) {
         token?.let { validToken ->
-            dataStore.updateData { store->
+            dataStore.updateData { store ->
                 store.copy(
                     jwtKey = validToken
                 )
             }
         }
-
     }
 
     override fun getJwtToken(): Flow<String?> {

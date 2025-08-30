@@ -7,7 +7,6 @@ import com.ab.an.domain.model.User
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.domain.usecase.user.GetCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -70,14 +69,11 @@ class ViewProfileViewModel @Inject constructor(
 
     fun logout() {
         viewModelScope.launch {
-            async {
-                appSettingsDataStoreRepository.setUserLoggedIn(false)
-                appSettingsDataStoreRepository.saveJwtToken(null)
-                appSettingsDataStoreRepository.setUser(User())
-            }.await()
-            _state.value = _state.value.copy(
-                isLoggedOut = true
-            )
+            appSettingsDataStoreRepository.logout().collect {
+                _state.value = _state.value.copy(
+                    isLoggedOut = true
+                )
+            }
         }
 
     }

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.automirrored.outlined.ArrowForwardIos
 import androidx.compose.material.icons.outlined.AssignmentInd
 import androidx.compose.material.icons.outlined.Cake
 import androidx.compose.material.icons.outlined.CameraEnhance
+import androidx.compose.material.icons.outlined.Contacts
 import androidx.compose.material.icons.outlined.Mail
 import androidx.compose.material.icons.outlined.Password
 import androidx.compose.material.icons.outlined.Phone
@@ -246,7 +247,7 @@ fun ViewProfileScreen(
                         )
                         HorizontalDivider()
                         EditOptionRow(
-                            leadingIcon = Icons.Outlined.Mail,
+                            leadingIcon = Icons.Outlined.Contacts,
                             label = "Update contact information",
                             trailingIcon = Icons.AutoMirrored.Outlined.ArrowForwardIos,
                             value = "Edit profile details ",

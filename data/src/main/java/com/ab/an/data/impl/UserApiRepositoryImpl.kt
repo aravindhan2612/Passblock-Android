@@ -1,4 +1,4 @@
-package com.ab.an.data.network.impl
+package com.ab.an.data.impl
 
 import com.ab.an.core.utils.Resource
 import com.ab.an.data.mapper.toUser
@@ -20,7 +20,7 @@ import javax.inject.Inject
 class UserApiRepositoryImpl @Inject constructor(
     private val apiService: UserApiService,
     private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository
-) : UserApiRepository, BaseRepositoryImpl() {
+) : UserApiRepository, BaseApiRepositoryImpl() {
 
     override fun register(user: User): Flow<Resource<User>> = flow {
 

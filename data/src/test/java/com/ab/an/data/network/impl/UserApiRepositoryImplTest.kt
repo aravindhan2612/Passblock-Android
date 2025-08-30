@@ -2,6 +2,7 @@ package com.ab.an.data.network.impl
 
 import app.cash.turbine.test
 import com.ab.an.core.utils.Resource
+import com.ab.an.data.impl.UserApiRepositoryImpl
 import com.ab.an.data.mapper.toUser
 import com.ab.an.data.mapper.toUserDto
 import com.ab.an.data.network.api.UserApiService
