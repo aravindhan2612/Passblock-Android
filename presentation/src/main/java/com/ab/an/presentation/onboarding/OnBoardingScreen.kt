@@ -24,6 +24,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -40,9 +41,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.presentation.R
-import com.ab.an.presentation.components.PrimaryButton
-import com.ab.an.presentation.components.PrimaryOutlinedButton
 import com.ab.an.presentation.components.PrimaryText
+import com.ab.an.presentation.components.SecondaryButton
+import com.ab.an.presentation.components.SecondaryOutlinedButton
+import com.ab.an.presentation.theme.AppTypography
 import kotlinx.coroutines.delay
 
 @Composable
@@ -72,7 +74,6 @@ fun OnboardingScreen(
     }
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.secondary
     ) {
         Column(
             modifier = Modifier
@@ -87,7 +88,7 @@ fun OnboardingScreen(
             ) {
                 repeat(pagerState.pageCount) { iteration ->
                     val color =
-                        if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondary
+                        if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer
                     Box(
                         modifier = Modifier
                             .padding(20.dp)
@@ -96,7 +97,7 @@ fun OnboardingScreen(
                             .clip(RoundedCornerShape(5.dp))
                             .border(
                                 width = 1.dp,
-                                color = MaterialTheme.colorScheme.primary,
+                                color = MaterialTheme.colorScheme.onSurface,
                                 shape = RoundedCornerShape(5.dp)
                             )
                             .background(color)
@@ -119,21 +120,19 @@ fun OnboardingScreen(
                     .padding(20.dp),
                 verticalArrangement = Arrangement.spacedBy(20.dp)
             ) {
-                PrimaryButton(
+                SecondaryButton(
                     onClick = {
                         onboardViewModel.setOnBoardShown(true)
                     },
                     label = stringResource(R.string.register),
                     modifier = Modifier.fillMaxWidth(),
-                    labelFontSize = 20.sp
                 )
-                PrimaryOutlinedButton(
+                SecondaryOutlinedButton(
                     onClick = {
                         onboardViewModel.setOnBoardShown(false)
                     },
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(R.string.already_have_an_account),
-                    labelFontSize = 18.sp
                 )
             }
         }
@@ -158,7 +157,7 @@ fun OnBoardItem(onBoardModel: OnBoardDetail) {
                     )
                     .fillMaxWidth(),
                 colorFilter = ColorFilter.tint(
-                    color = MaterialTheme.colorScheme.primary
+                    color = MaterialTheme.colorScheme.onSurface
                 )
             )
             Spacer(
@@ -176,17 +175,18 @@ fun OnBoardItem(onBoardModel: OnBoardDetail) {
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            PrimaryText(
+            Text(
                 text = onBoardModel.title,
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold
+                color = MaterialTheme.colorScheme.onSurface,
+                style = AppTypography.titleLarge
             )
             Spacer(
                 modifier = Modifier.height(10.dp)
             )
-            PrimaryText(
+            Text(
                 text = onBoardModel.description,
-                fontSize = 16.sp,
+                color = MaterialTheme.colorScheme.outline,
+                style = AppTypography.bodyMedium
             )
         }
     } else {
@@ -215,10 +215,10 @@ fun OnBoardItem(onBoardModel: OnBoardDetail) {
                 textAlign = TextAlign.Center,
                 fontWeight = FontWeight.Bold
             )
-            PrimaryText(
+            Text(
                 text = onBoardModel.description,
-                fontSize = 20.sp,
-                textAlign = TextAlign.Center
+                color = MaterialTheme.colorScheme.onSurface,
+                style = AppTypography.titleLarge
             )
         }
     }

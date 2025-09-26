@@ -1,7 +1,6 @@
 package com.ab.an.presentation.updateContactInfo
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -14,15 +13,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,6 +29,8 @@ import com.ab.an.presentation.components.DatePickerFieldToModal
 import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryOutlinedTextField
+import com.ab.an.presentation.components.TopBarIcon
+import com.ab.an.presentation.components.TopBarText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,32 +50,24 @@ fun UpdateContactInfoScreen(
 
     Surface(
         modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.secondary
     ) {
         Scaffold(
             modifier = Modifier.windowInsetsPadding(
                 WindowInsets.safeDrawing
             ),
             topBar = {
-                CenterAlignedTopAppBar(
+                TopAppBar(
                     title = {
-                        Text(text = "Edit Contact Info")
+                        TopBarText(
+                            text = "Edit Contact"
+                        )
                     },
                     navigationIcon = {
-                        IconButton(
-                            onClick = navBack
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                                contentDescription = null
-                            )
-                        }
-
+                        TopBarIcon(
+                            onClick = navBack,
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack
+                        )
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        titleContentColor = MaterialTheme.colorScheme.primary
-                    )
                 )
             }
         ) { innerPadding ->
@@ -90,9 +78,6 @@ fun UpdateContactInfoScreen(
                     modifier = Modifier
                         .padding(innerPadding)
                         .fillMaxSize()
-                        .background(
-                            color = MaterialTheme.colorScheme.secondary
-                        )
                 ) {
                     Column(
                         modifier = Modifier
@@ -104,7 +89,7 @@ fun UpdateContactInfoScreen(
                             fullName = state.user.fullName,
                             profilePicture = state.user.profilePicture,
                             onClick = {
-                               navToAddOrEditProfilePicture()
+                                navToAddOrEditProfilePicture()
                             })
                         PrimaryOutlinedTextField(
                             value = state.user.fullName,

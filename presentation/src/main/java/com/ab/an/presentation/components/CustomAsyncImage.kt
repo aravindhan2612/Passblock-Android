@@ -20,7 +20,7 @@ fun CustomAsyncImage(
     url: String,
     modifier: Modifier = Modifier,
     label: String,
-    textColor: Color = MaterialTheme.colorScheme.secondary,
+    textColor: Color = MaterialTheme.colorScheme.onSurface,
     fontSize: TextUnit = TextUnit.Unspecified
 ) {
     val painter = rememberAsyncImagePainter(
@@ -50,7 +50,7 @@ fun CustomAsyncImage(
                 UserInitialsAvatar(
                     username = label,
                     modifier = modifier,
-                    backgroundColor = MaterialTheme.colorScheme.primary,
+                    backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
                     textColor = textColor,
                     fontSize = fontSize
                 )
@@ -62,7 +62,7 @@ fun CustomAsyncImage(
             UserInitialsAvatar(
                 username = label,
                 modifier = modifier,
-                backgroundColor = MaterialTheme.colorScheme.primary,
+                backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
                 textColor = textColor,
                 fontSize = fontSize
             )

@@ -1,8 +1,8 @@
 package com.ab.an.presentation.home
 
 import android.widget.Toast
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -13,14 +13,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -29,16 +32,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.ab.an.domain.model.Password
+import com.ab.an.presentation.addOrEditPassword.categories
 import com.ab.an.presentation.components.CustomAsyncImage
-import com.ab.an.presentation.components.OnPrimaryText
+import com.ab.an.presentation.components.FilterChip
 import com.ab.an.presentation.components.PrimaryButton
+import com.ab.an.presentation.components.PrimaryOutlinedTextField
 import com.ab.an.presentation.components.PrimaryText
+import com.ab.an.presentation.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -58,17 +63,14 @@ fun HomeScreen(
         state = refreshState,
         modifier = Modifier
             .padding(innerPadding)
-            .fillMaxSize()
-            .background(
-                color = MaterialTheme.colorScheme.secondary
-            ),
+            .fillMaxSize(),
         indicator = {
             Indicator(
                 state = refreshState,
                 modifier = Modifier.align(Alignment.TopCenter),
                 isRefreshing = state.isLoading,
-                containerColor = MaterialTheme.colorScheme.tertiary,
-                color = MaterialTheme.colorScheme.secondary
+                containerColor = MaterialTheme.colorScheme.secondary,
+                color = MaterialTheme.colorScheme.onPrimary
             )
         }
 
@@ -98,25 +100,46 @@ fun HomeScreen(
                 )
             }
         } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize(),
-                contentPadding = PaddingValues(16.dp)
+            Column(
+                modifier = Modifier.fillMaxSize()
             ) {
-                items(state.passwords) { sectionListItem ->
-                    when (sectionListItem) {
-                        is PasswordSectionListItem.Header -> {
-                            SectionHeader(title = sectionListItem.title)
-                        }
-
-                        is PasswordSectionListItem.Item -> {
-                            ListItem(
-                                item = sectionListItem,
-                                onItemClick = {
-                                    navToViewPassword(sectionListItem.password.id)
-                                }
-                            )
-                        }
+                PrimaryOutlinedTextField(
+                    value = state.searchText,
+                    onValueChange = {
+                        homeViewModel.onIntent(HomeIntent.OnSearchTextChanged(it))
+                    },
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth(),
+                    label = "Search"
+                )
+                LazyRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    items(categories) { category ->
+                        FilterChip(
+                            text = category.name,
+                            selected = state.selectedCategory == category,
+                            onClick = {
+                                homeViewModel.onIntent(HomeIntent.OnCategoryChanged(it, category))
+                            }
+                        )
+                    }
+                }
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    contentPadding = PaddingValues(16.dp)
+                ) {
+                    items(state.filteredPasswords) { password ->
+                        ListItem(
+                            password = password,
+                            onItemClick = {
+                                navToViewPassword(password.id)
+                            }
+                        )
                     }
                 }
             }
@@ -126,59 +149,68 @@ fun HomeScreen(
 
 @Composable
 fun SectionHeader(title: String) {
-    PrimaryText(
+    Text(
         text = title, modifier = Modifier
             .fillMaxWidth(),
-        fontWeight = FontWeight.W600
+        style = AppTypography.titleLarge,
+        color = MaterialTheme.colorScheme.primary
     )
 }
 
 @Composable
 fun ListItem(
-    item: PasswordSectionListItem.Item,
+    password: Password,
     onItemClick: () -> Unit
 ) {
     val context = LocalContext.current
-
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                onItemClick()
-            }
-            .padding(12.dp)
-    ) {
-        CustomAsyncImage(
-            label = item.password.name,
-            url = item.password.faviconUrl,
-            modifier = Modifier.size(50.dp)
+    ElevatedCard(
+        modifier = Modifier.padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant
         )
-        Column(
+    ) {
+        Row(
             modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .weight(1f)
+                .fillMaxWidth()
+                .clickable {
+                    onItemClick()
+                }
+                .padding(12.dp)
         ) {
-            PrimaryText(text = item.password.name, fontWeight = FontWeight.Medium, fontSize = 18.sp)
-            OnPrimaryText(
-                text = item.password.username,
-                fontSize = 14.sp,
+            CustomAsyncImage(
+                label = password.name,
+                url = password.faviconUrl,
+                modifier = Modifier.size(50.dp)
             )
-        }
-        IconButton(
-            colors = IconButtonDefaults.iconButtonColors(
-                contentColor = MaterialTheme.colorScheme.secondary,
-            ),
-            onClick = {
-                Toast.makeText(context, "Copied ${item.password.username}", Toast.LENGTH_SHORT)
-                    .show()
-            },
-            modifier = Modifier.size(50.dp)
-        ) {
-            Icon(
-                imageVector = Icons.Filled.ContentCopy,
-                contentDescription = "Copy",
-                tint = MaterialTheme.colorScheme.primary
-            )
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 20.dp)
+                    .weight(1f)
+            ) {
+                Text(
+                    text = password.name,
+                    style = AppTypography.titleMedium,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Text(
+                    text = password.username,
+                    style = AppTypography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline
+                )
+            }
+            IconButton(
+                onClick = {
+                    Toast.makeText(context, "Copied ${password.username}", Toast.LENGTH_SHORT)
+                        .show()
+                },
+                modifier = Modifier.size(50.dp)
+            ) {
+                Icon(
+                    imageVector = Icons.Filled.ContentCopy,
+                    contentDescription = "Copy",
+                    tint = MaterialTheme.colorScheme.onSurface
+                )
+            }
         }
     }
 

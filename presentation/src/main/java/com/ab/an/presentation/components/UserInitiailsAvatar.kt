@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.TextUnit
 fun UserInitialsAvatar(
     username: String,
     modifier: Modifier = Modifier,
-    backgroundColor: Color = MaterialTheme.colorScheme.primary,
+    backgroundColor: Color = MaterialTheme.colorScheme.secondaryContainer,
     textColor: Color = MaterialTheme.colorScheme.secondary,
     fontSize: TextUnit = TextUnit.Unspecified
 ) {

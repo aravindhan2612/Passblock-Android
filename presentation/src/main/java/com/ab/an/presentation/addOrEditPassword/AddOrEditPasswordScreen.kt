@@ -11,30 +11,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.ab.an.core.R
+import com.ab.an.presentation.R
 import com.ab.an.presentation.components.DynamicSelectTextField
 import com.ab.an.presentation.components.LoadingIndicatorScreen
-import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryOutlinedTextField
+import com.ab.an.presentation.components.SecondaryButton
+import com.ab.an.presentation.components.TopBarIcon
+import com.ab.an.presentation.components.TopBarText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -54,7 +54,8 @@ fun AddOrEditPasswordScreen(
     }
     LaunchedEffect(state.success) {
         if (state.success) {
-            val msg = if(isEditMode) "Password updated successfully" else "Password added successfully"
+            val msg =
+                if (isEditMode) "Password updated successfully" else "Password added successfully"
             Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
             navToHome()
         }
@@ -68,26 +69,20 @@ fun AddOrEditPasswordScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         contentWindowInsets = WindowInsets.safeDrawing,
-        containerColor = MaterialTheme.colorScheme.secondary,
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = {
-                    Text(text = if (isEditMode) "Edit record" else "New record")
+                    TopBarText(
+                        text = if (isEditMode) "Edit Password" else "Add Password"
+                    )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = navToHome
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.outline_arrow_back_24),
-                            contentDescription = null
-                        )
-                    }
+                    TopBarIcon(
+                        onClick = navToHome,
+                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack
+
+                    )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                )
             )
         }
     ) { innerPadding ->
@@ -165,7 +160,7 @@ fun AddOrEditPasswordScreen(
 
                     DynamicSelectTextField(
                         selectedValue = state.passwordEntity.tag,
-                        options = tags,
+                        options = categories,
                         label = "Tag",
                         onValueChangeEvent = {
                             addOrEditPasswordViewModel.onIntent(
@@ -178,7 +173,7 @@ fun AddOrEditPasswordScreen(
                     )
                 }
 
-                PrimaryButton(
+                SecondaryButton(
                     onClick = {
                         addOrEditPasswordViewModel.onIntent(
                             AddOrEditPasswordIntent.Submit(
@@ -186,7 +181,7 @@ fun AddOrEditPasswordScreen(
                             )
                         )
                     },
-                    label = "Submit",
+                    label = stringResource(R.string.submit),
                     modifier = Modifier
                         .padding(20.dp)
                         .fillMaxWidth(),
@@ -206,7 +201,7 @@ fun AddOrEditPasswordScreen(
                         TextButton(
                             onClick = navToHome
                         ) {
-                            Text(text = "Close")
+                            Text(text = stringResource(R.string.close))
                         }
                     }
                 )

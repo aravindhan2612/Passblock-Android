@@ -1,6 +1,5 @@
 package com.ab.an.presentation.profile
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -30,11 +29,8 @@ import androidx.compose.material.icons.outlined.Phone
 import androidx.compose.material.icons.outlined.Sync
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.PlainTooltip
@@ -43,16 +39,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TooltipBox
 import androidx.compose.material3.TooltipDefaults
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.rememberTooltipState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ab.an.core.utils.Constants
@@ -62,8 +56,10 @@ import com.ab.an.presentation.components.DetailRow
 import com.ab.an.presentation.components.EditOptionRow
 import com.ab.an.presentation.components.ErrorDialog
 import com.ab.an.presentation.components.LoadingIndicatorScreen
-import com.ab.an.presentation.components.PrimaryOutlinedButton
-import com.ab.an.presentation.components.PrimaryText
+import com.ab.an.presentation.components.SecondaryButton
+import com.ab.an.presentation.components.TopBarIcon
+import com.ab.an.presentation.components.TopBarText
+import com.ab.an.presentation.theme.AppTypography
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -85,31 +81,23 @@ fun ViewProfileScreen(
     }
 
     Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.secondary
-    ) {
+        modifier = Modifier.fillMaxSize()) {
         Scaffold(
             modifier = Modifier
                 .windowInsetsPadding(WindowInsets.safeDrawing)
                 .fillMaxSize(),
             topBar = {
-                CenterAlignedTopAppBar(
+                TopAppBar(
                     title = {
-                        Text(text = "Profile")
+                        TopBarText(
+                            text = "Profile"
+                        )
                     },
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = MaterialTheme.colorScheme.secondary,
-                        titleContentColor = MaterialTheme.colorScheme.primary
-                    ),
                     navigationIcon = {
-                        IconButton(
-                            onClick = navBack
-                        ) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                                contentDescription = null,
-                            )
-                        }
+                        TopBarIcon(
+                            onClick = navBack,
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack
+                        )
                     },
                     actions = {
                         TooltipBox(
@@ -121,16 +109,12 @@ fun ViewProfileScreen(
                             },
                             state = rememberTooltipState()
                         ) {
-                            IconButton(
+                            TopBarIcon(
                                 onClick = {
                                     viewModel.fetchUserFromApi()
-                                }
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Sync,
-                                    contentDescription = "Sync",
-                                )
-                            }
+                                },
+                                imageVector = Icons.Outlined.Sync
+                            )
                         }
 
                     }
@@ -140,9 +124,6 @@ fun ViewProfileScreen(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(
-                        color = MaterialTheme.colorScheme.secondary
-                    )
             ) {
                 Column(
                     modifier = Modifier
@@ -173,15 +154,15 @@ fun ViewProfileScreen(
                             modifier = Modifier.padding(vertical = 12.dp),
                             verticalArrangement = Arrangement.Center,
                         ) {
-                            PrimaryText(
+                            Text(
                                 text = state.user.fullName,
-                                fontWeight = FontWeight.ExtraBold,
-                                fontSize = 24.sp
+                                color = MaterialTheme.colorScheme.primary,
+                                style = AppTypography.headlineMedium
                             )
                             Text(
                                 text = state.user.email,
-                                color = MaterialTheme.colorScheme.onPrimary,
-                                fontSize = 16.sp
+                                color = MaterialTheme.colorScheme.outline,
+                                style = AppTypography.titleMedium
                             )
                         }
                     }
@@ -189,8 +170,7 @@ fun ViewProfileScreen(
                     OutlinedCard(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
                     ) {
                         HorizontalDivider()
@@ -225,8 +205,7 @@ fun ViewProfileScreen(
                     OutlinedCard(
                         modifier = Modifier.fillMaxWidth(),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.secondary,
-                            contentColor = MaterialTheme.colorScheme.primary
+                            containerColor = MaterialTheme.colorScheme.surfaceVariant,
                         )
                     ) {
                         EditOptionRow (
@@ -266,7 +245,7 @@ fun ViewProfileScreen(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.Center
                     ) {
-                        PrimaryOutlinedButton(
+                        SecondaryButton(
                             onClick = {
                                 viewModel.logout()
                             },

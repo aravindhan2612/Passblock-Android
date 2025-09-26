@@ -3,7 +3,6 @@ package com.ab.an.presentation.addOrEditProfilePicture
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,14 +20,11 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.outlined.AddPhotoAlternate
 import androidx.compose.material3.Card
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -43,7 +39,9 @@ import com.ab.an.presentation.components.CustomAsyncImage
 import com.ab.an.presentation.components.ErrorDialog
 import com.ab.an.presentation.components.LeadingIconButton
 import com.ab.an.presentation.components.LoadingIndicatorScreen
-import com.ab.an.presentation.components.PrimaryText
+import com.ab.an.presentation.components.TopBarIcon
+import com.ab.an.presentation.components.TopBarText
+import com.ab.an.presentation.theme.AppTypography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,23 +64,17 @@ fun AddOrEditPictureScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = {
-                    Text(text = "Profile picture")
+                    TopBarText(
+                        text = "Profile picture"
+                    )
                 },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondary,
-                    titleContentColor = MaterialTheme.colorScheme.primary
-                ),
                 navigationIcon = {
-                    IconButton(
-                        onClick = navBack
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                            contentDescription = null,
-                        )
-                    }
+                    TopBarIcon(
+                        onClick = navBack,
+                        imageVector = Icons.AutoMirrored.Outlined.ArrowBack
+                    )
                 }
             )
         }
@@ -107,14 +99,11 @@ fun AddOrEditPictureScreen(
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
-                            .background(
-                                color = MaterialTheme.colorScheme.secondary
-                            )
                             .padding(20.dp)
                     ) {
-                        PrimaryText(
+                        Text(
                             text = "A picture help to recognize you and lets you know when you're signed in to account",
-                            fontSize = 13.sp
+                            style = AppTypography.bodyLarge
                         )
                         Spacer(modifier = Modifier.height(20.dp))
                         Column(
@@ -158,7 +147,6 @@ fun AddOrEditPictureScreen(
                                         Icon(
                                             imageVector = Icons.Filled.Edit,
                                             contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.secondary,
                                             modifier = Modifier.size(16.dp)
                                         )
                                     }
@@ -172,7 +160,6 @@ fun AddOrEditPictureScreen(
                                         Icon(
                                             imageVector = Icons.Filled.Delete,
                                             contentDescription = null,
-                                            tint = MaterialTheme.colorScheme.secondary,
                                             modifier = Modifier.size(16.dp)
                                         )
                                     }
@@ -191,7 +178,6 @@ fun AddOrEditPictureScreen(
                                     Icon(
                                         imageVector = Icons.Outlined.AddPhotoAlternate,
                                         contentDescription = null,
-                                        tint = MaterialTheme.colorScheme.secondary,
                                         modifier = Modifier.size(16.dp)
                                     )
                                 }

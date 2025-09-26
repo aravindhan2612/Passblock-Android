@@ -5,12 +5,14 @@ import androidx.lifecycle.viewModelScope
 import com.ab.an.core.utils.Resource
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.domain.repository.PasswordRepository
+import com.ab.an.presentation.addOrEditPassword.Category
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,6 +31,56 @@ class HomeViewModel @Inject constructor(
         SharingStarted.WhileSubscribed(5000L),
         HomeState()
     )
+
+    fun onIntent(intent: HomeIntent) {
+        when (intent) {
+            is HomeIntent.FetchPasswords -> {
+                fetchPasswords()
+            }
+
+            is HomeIntent.OnSearchTextChanged -> {
+                filterPasswordsBySearchText(text = intent.text)
+            }
+
+            is HomeIntent.OnCategoryChanged -> {
+                filterPasswordsByCategory(intent.selected, intent.category)
+            }
+        }
+    }
+
+    private fun filterPasswordsBySearchText(text: String = "") {
+        _state.update { currentState ->
+            val newFilteredItems = if (text.isBlank()) {
+                currentState.passwords
+            } else {
+                currentState.passwords.filter {
+                    it.name.contains(text, ignoreCase = true) || it.username.contains(
+                        text,
+                        ignoreCase = true
+                    )
+                }
+            }
+            currentState.copy(
+                searchText = text,
+                filteredPasswords = newFilteredItems
+            )
+        }
+    }
+
+    private fun filterPasswordsByCategory(selected: Boolean, category: Category?) {
+        val selectedCategory = if (selected) category else null
+        _state.update { currentState ->
+            val newFilteredItems = if (selectedCategory == null) {
+                currentState.passwords
+            } else {
+                currentState.passwords.filter { it.tag == category?.name }
+            }
+            currentState.copy(
+                selectedCategory = selectedCategory,
+                filteredPasswords = newFilteredItems
+            )
+        }
+    }
 
     fun fetchPasswords() {
         viewModelScope.launch {
@@ -70,18 +122,10 @@ class HomeViewModel @Inject constructor(
                 if (passwordEntities.isEmpty()) {
                     fetchPasswords()
                 } else {
-                    val sectionListItems = mutableListOf<PasswordSectionListItem>()
-                    passwordEntities.groupBy { passwordEntity ->
-                        passwordEntity.tag
-                    }.forEach { (tag, passwords) ->
-                        sectionListItems.add(PasswordSectionListItem.Header(tag))
-                        passwords.forEach { password ->
-                            sectionListItems.add(PasswordSectionListItem.Item(password))
-                        }
-                    }
                     _state.value = _state.value.copy(
                         isLoading = false,
-                        passwords = sectionListItems
+                        passwords = passwordEntities,
+                        filteredPasswords = passwordEntities
                     )
                 }
             }

@@ -16,4 +16,7 @@
     <string name="register">Register</string>
     <string name="already_have_an_account">Already have an account</string>
     <string name="login">Login</string>
+    <string name="details">Details</string>
+    <string name="close">Close</string>
+    <string name="submit">Submit</string>
 </resources>

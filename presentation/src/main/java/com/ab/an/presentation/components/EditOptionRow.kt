@@ -9,13 +9,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.ab.an.presentation.theme.AppTypography
 
 @Composable
 fun EditOptionRow(
@@ -44,15 +45,15 @@ fun EditOptionRow(
             )
             Spacer(modifier = Modifier.size(20.dp))
             Column {
-                PrimaryText(
+                Text(
                     text = label,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold
+                    style = AppTypography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary
                 )
                 value?.let {
-                    PrimaryText(
+                    Text(
                         text = it,
-                        fontSize = 12.sp
+                        style = AppTypography.bodyMedium
                     )
                 }
             }
