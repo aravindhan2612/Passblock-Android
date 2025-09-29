@@ -1,6 +1,5 @@
 package com.ab.an.presentation.setting
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -15,7 +14,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -43,9 +41,6 @@ fun SettingScreen(
         modifier = Modifier
             .padding(innerPadding)
             .fillMaxSize()
-            .background(
-                color = MaterialTheme.colorScheme.secondary
-            )
             .padding(horizontal = 20.dp)
             .verticalScroll(rememberScrollState())
         ,

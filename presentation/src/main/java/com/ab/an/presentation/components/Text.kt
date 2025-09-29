@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
+import com.ab.an.presentation.theme.AppTypography
 
 @Composable
 fun PrimaryText(
@@ -41,5 +42,16 @@ fun OnPrimaryText(
         fontWeight = fontWeight,
         color = MaterialTheme.colorScheme.onPrimary,
         textAlign = textAlign
+    )
+}
+
+@Composable
+fun TopBarText(
+    text: String
+) {
+    Text(
+        text = text,
+        style = AppTypography.headlineSmall,
+        color = MaterialTheme.colorScheme.primary
     )
 }

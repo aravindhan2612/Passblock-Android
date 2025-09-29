@@ -8,12 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,6 +23,8 @@ import com.ab.an.presentation.components.ErrorDialog
 import com.ab.an.presentation.components.LoadingIndicatorScreen
 import com.ab.an.presentation.components.PrimaryButton
 import com.ab.an.presentation.components.PrimaryOutlinedTextField
+import com.ab.an.presentation.components.TopBarIcon
+import com.ab.an.presentation.components.TopBarText
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +36,7 @@ fun ChangePasswordScreen(
     val state by changePasswordViewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(state.success) {
-        if(state.success) {
+        if (state.success) {
             Toast.makeText(context, "Password changed successfully", Toast.LENGTH_SHORT).show()
             navBack()
         }
@@ -46,19 +45,17 @@ fun ChangePasswordScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            CenterAlignedTopAppBar(
+            TopAppBar(
                 title = {
-                    Text(text = "Change Password")
+                    TopBarText(
+                        text = "Change Password"
+                    )
                 },
                 navigationIcon = {
-                    IconButton(
-                        onClick = navBack
-                    ) {
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                            contentDescription = null
-                        )
-                    }
+                    TopBarIcon(
+                        onClick = navBack,
+                        imageVector = Icons.AutoMirrored.Default.ArrowBack
+                    )
                 }
             )
         }
@@ -133,9 +130,11 @@ fun ChangePasswordScreen(
                 )
             }
             if (!state.errorMessage.isNullOrBlank()) {
-                state.errorMessage?.let { ErrorDialog(it, onClose = {
-                    changePasswordViewModel.onIntent(ChangePasswordIntent.OnDismiss)
-                }) }
+                state.errorMessage?.let {
+                    ErrorDialog(it, onClose = {
+                        changePasswordViewModel.onIntent(ChangePasswordIntent.OnDismiss)
+                    })
+                }
             }
             if (state.isLoading) {
                 LoadingIndicatorScreen()

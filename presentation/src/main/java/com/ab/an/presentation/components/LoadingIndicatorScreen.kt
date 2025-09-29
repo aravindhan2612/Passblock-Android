@@ -17,7 +17,7 @@ fun LoadingIndicatorScreen() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                MaterialTheme.colorScheme.secondary.copy(
+                MaterialTheme.colorScheme.inverseOnSurface.copy(
                     alpha = 0.5f
                 )
             ),

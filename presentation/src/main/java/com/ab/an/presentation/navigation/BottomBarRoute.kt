@@ -1,10 +1,8 @@
 package com.ab.an.presentation.navigation
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.FindInPage
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.outlined.FindInPage
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.runtime.saveable.Saver
@@ -24,12 +22,6 @@ sealed class BottomBarRoute(
         showNavigationIcon = true,
         showActionIcon = true
     )
-
-    @Serializable
-    object Search : BottomBarRoute(
-        title = Constants.SEARCH,
-    )
-
     @Serializable
     object Setting : BottomBarRoute(
         title = Constants.SETTING,
@@ -51,12 +43,6 @@ val bottomNavigationRoutes = listOf(
         filledIcon = Icons.Filled.Home
     ),
     NavigationBarItemDetail(
-        BottomBarRoute.Search,
-        "Search",
-        outlineIcon = Icons.Outlined.FindInPage,
-        filledIcon = Icons.Filled.FindInPage
-    ),
-    NavigationBarItemDetail(
         BottomBarRoute.Setting,
         "Settings",
         outlineIcon = Icons.Outlined.Settings,
@@ -69,7 +55,6 @@ val BottomBarScreenSaver = Saver<BottomBarRoute, String>(
     restore = {
         when (it) {
             BottomBarRoute.Home::class.simpleName -> BottomBarRoute.Home
-            BottomBarRoute.Search::class.simpleName -> BottomBarRoute.Search
             BottomBarRoute.Setting::class.simpleName -> BottomBarRoute.Setting
             else -> BottomBarRoute.Home
 

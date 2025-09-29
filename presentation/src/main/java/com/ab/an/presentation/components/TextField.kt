@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.VisualTransformation
+import com.ab.an.presentation.addOrEditPassword.Category
 
 @Composable
 fun PrimaryOutlinedTextField(
@@ -76,9 +77,9 @@ fun PrimaryOutlinedTextField(
 @Composable
 fun DynamicSelectTextField(
     selectedValue: String,
-    options: List<String>,
+    options: List<Category>,
     label: String,
-    onValueChangeEvent: (String) -> Unit,
+    onValueChangeEvent: (Category) -> Unit,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
 ) {
@@ -112,11 +113,10 @@ fun DynamicSelectTextField(
             onDismissRequest = {
                 expanded = false
             },
-            containerColor = MaterialTheme.colorScheme.secondary,
         ) {
             options.map { value ->
                 DropdownMenuItem(
-                    text = { Text(text = value) },
+                    text = { Text(text = value.name) },
                     onClick = {
                         expanded = false
                         onValueChangeEvent(value)

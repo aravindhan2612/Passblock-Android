@@ -23,7 +23,7 @@ class AddOrEditPasswordViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         AddOrEditPasswordState(
             passwordEntity = Password(
-                tag = tags.last()
+                tag = categories.last().name
             )
         )
     )
@@ -74,7 +74,7 @@ class AddOrEditPasswordViewModel @Inject constructor(
             is AddOrEditPasswordIntent.TagChanged -> {
                 _state.value = _state.value.copy(
                     passwordEntity = _state.value.passwordEntity.copy(
-                        tag = intent.tag
+                        tag = intent.tag.name
                     )
                 )
             }
