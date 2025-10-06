@@ -34,7 +34,8 @@ fun PrimaryOutlinedTextField(
     visualTransformation: VisualTransformation = VisualTransformation.None,
     errorMessage: String = "",
     enabled: Boolean = true,
-    readOnly: Boolean = false
+    readOnly: Boolean = false,
+    maxLines: Int = Int.MAX_VALUE
 ) {
     val isError = errorMessage.isNotEmpty()
     OutlinedTextField(
@@ -69,7 +70,8 @@ fun PrimaryOutlinedTextField(
             focusedTrailingIconColor = MaterialTheme.colorScheme.primary,
             focusedLabelColor = MaterialTheme.colorScheme.primary,
         ),
-        enabled = enabled
+        enabled = enabled,
+        maxLines = maxLines
     )
 }
 

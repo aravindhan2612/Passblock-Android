@@ -15,8 +15,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -24,6 +26,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -31,6 +35,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -41,7 +47,6 @@ import com.ab.an.presentation.addOrEditPassword.categories
 import com.ab.an.presentation.components.CustomAsyncImage
 import com.ab.an.presentation.components.FilterChip
 import com.ab.an.presentation.components.PrimaryButton
-import com.ab.an.presentation.components.PrimaryOutlinedTextField
 import com.ab.an.presentation.components.PrimaryText
 import com.ab.an.presentation.theme.AppTypography
 
@@ -101,29 +106,56 @@ fun HomeScreen(
             }
         } else {
             Column(
-                modifier = Modifier.fillMaxSize()
+                modifier = Modifier.fillMaxSize(),
             ) {
-                PrimaryOutlinedTextField(
+                TextField(
                     value = state.searchText,
                     onValueChange = {
                         homeViewModel.onIntent(HomeIntent.OnSearchTextChanged(it))
                     },
                     modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .fillMaxWidth(),
-                    label = "Search"
+                        .padding(horizontal = 16.dp, vertical = 4.dp)
+                        .fillMaxWidth()
+                        .clip(
+                            shape = RoundedCornerShape(28.dp)
+                        ),
+                    colors = TextFieldDefaults.colors(
+                        unfocusedIndicatorColor = Color.Transparent,
+                        focusedIndicatorColor = Color.Transparent,
+
+                        ),
+                    placeholder = {
+                        Text(
+                            text = "Search",
+                            style = AppTypography.bodyLarge,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                    },
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Outlined.Search,
+                            contentDescription = "Search",
+                            modifier = Modifier.padding(16.dp)
+                        )
+                    },
+                    maxLines = 1,
                 )
                 LazyRow(
                     modifier = Modifier.fillMaxWidth(),
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    contentPadding = PaddingValues(horizontal = 20.dp),
+                    horizontalArrangement = Arrangement.SpaceAround
                 ) {
                     items(categories) { category ->
                         FilterChip(
                             text = category.name,
                             selected = state.selectedCategory == category,
                             onClick = {
-                                homeViewModel.onIntent(HomeIntent.OnCategoryChanged(it, category))
+                                homeViewModel.onIntent(
+                                    HomeIntent.OnCategoryChanged(
+                                        it,
+                                        category
+                                    )
+                                )
                             }
                         )
                     }
@@ -131,10 +163,10 @@ fun HomeScreen(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize(),
-                    contentPadding = PaddingValues(16.dp)
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp)
                 ) {
                     items(state.filteredPasswords) { password ->
-                        ListItem(
+                        PasswordItem(
                             password = password,
                             onItemClick = {
                                 navToViewPassword(password.id)
@@ -148,17 +180,7 @@ fun HomeScreen(
 }
 
 @Composable
-fun SectionHeader(title: String) {
-    Text(
-        text = title, modifier = Modifier
-            .fillMaxWidth(),
-        style = AppTypography.titleLarge,
-        color = MaterialTheme.colorScheme.primary
-    )
-}
-
-@Composable
-fun ListItem(
+fun PasswordItem(
     password: Password,
     onItemClick: () -> Unit
 ) {

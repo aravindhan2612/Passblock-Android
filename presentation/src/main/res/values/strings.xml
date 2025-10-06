@@ -19,4 +19,10 @@
     <string name="details">Details</string>
     <string name="close">Close</string>
     <string name="submit">Submit</string>
+    <string name="profile">Profile</string>
+    <string name="theme">Theme</string>
+    <string name="language">Language</string>
+    <string name="biometrics">Biometrics</string>
+    <string name="auto_lock">Auto-lock</string>
+    <string name="app_version">App Version</string>
 </resources>

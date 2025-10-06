@@ -20,8 +20,7 @@ import kotlinx.coroutines.launch
 class AppSettingsDataStoreImpl(
     private val dataStore: DataStore<AppSettingsEntity>,
     private val passblockDatabase: PassblockDatabase
-) :
-    AppSettingsDataStoreRepository {
+) : AppSettingsDataStoreRepository {
 
 
     override suspend fun setOnBoardShown(value: Boolean) {
@@ -69,6 +68,16 @@ class AppSettingsDataStoreImpl(
         }
         awaitClose {}
     }
+
+    override suspend fun saveThemeMode(mode: String) {
+        dataStore.updateData {
+            it.copy(
+                themeMode = mode
+            )
+        }
+    }
+
+    override val themeMode: Flow<String?> = dataStore.data.map { data -> data.themeMode }
 
     override suspend fun setUserLoggedIn(value: Boolean) {
         dataStore.updateData {
