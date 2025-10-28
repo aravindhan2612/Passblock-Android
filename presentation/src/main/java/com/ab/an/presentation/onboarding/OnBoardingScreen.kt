@@ -134,6 +134,7 @@ fun OnboardingScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(R.string.already_have_an_account),
+                    labelFontSize = 18.sp
                 )
             }
         }
