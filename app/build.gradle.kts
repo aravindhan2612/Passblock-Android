@@ -74,4 +74,6 @@ dependencies {
 
     implementation(libs.splashscreen)
 
+    implementation(libs.leak.canary.android)
+
 }
