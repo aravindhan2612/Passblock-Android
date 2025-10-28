@@ -9,7 +9,8 @@ fun AppSettings.toAppSettingsEntity(): AppSettingsEntity {
         isOnBoardingShown = isOnBoardingShown,
         isUserLoggedIn = isUserLoggedIn,
         jwtKey = jwtKey,
-        user = user.toUserDto()
+        user = user.toUserDto(),
+        themeMode = themeMode
     )
 }
 
@@ -18,6 +19,7 @@ fun AppSettingsEntity.toAppSettings(): AppSettings {
         isOnBoardingShown = isOnBoardingShown,
         isUserLoggedIn = isUserLoggedIn,
         jwtKey = jwtKey,
-        user = user.toUser()
+        user = user.toUser(),
+        themeMode = themeMode
     )
 }

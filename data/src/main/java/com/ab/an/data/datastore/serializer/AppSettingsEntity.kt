@@ -8,5 +8,6 @@ data class AppSettingsEntity(
     val isOnBoardingShown: Boolean = false,
     val isUserLoggedIn: Boolean = false,
     val jwtKey: String = "",
-    val user: UserDto = UserDto()
+    val user: UserDto = UserDto(),
+    val themeMode:String? = null
 )

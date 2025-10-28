@@ -22,7 +22,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AuthViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
+    @param:ApplicationContext private val context: Context,
     private val loginUseCase: UserLoginUseCase,
     private val registerUseCase: UserRegisterUseCase,
     private val validateEmailUseCase: ValidateEmailUseCase,

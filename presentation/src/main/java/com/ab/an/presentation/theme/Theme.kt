@@ -1,4 +1,5 @@
 package com.ab.an.presentation.theme
+
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
@@ -6,6 +7,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.ui.graphics.Color
+import com.ab.an.presentation.setting.ThemeMode
 
 private val lightScheme = lightColorScheme(
     primary = primaryLight,
@@ -249,25 +251,30 @@ val unspecified_scheme = ColorFamily(
 
 @Composable
 fun PassblockTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    theme: String?,
     // Dynamic color is available on Android 12+
     dynamicColor: Boolean = true,
     content: @Composable() () -> Unit
 ) {
-  val colorScheme = when {
+    val useDarkTheme = when (theme) {
+        ThemeMode.DARK.value -> true
+        ThemeMode.LIGHT.value -> false
+        else -> isSystemInDarkTheme()
+    }
+    val colorScheme = when {
 //      dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
 //          val context = LocalContext.current
 //          if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
 //      }
-      
-      darkTheme -> darkScheme
-      else -> lightScheme
-  }
 
-  MaterialTheme(
-    colorScheme = colorScheme,
-    typography = AppTypography,
-    content = content
-  )
+        useDarkTheme -> darkScheme
+        else -> lightScheme
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = AppTypography,
+        content = content
+    )
 }
 

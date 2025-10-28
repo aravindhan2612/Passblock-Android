@@ -28,6 +28,7 @@ turbineVersion = "1.2.1"
 coroutineTestVersion = "1.10.2"
 roomVersion = "2.7.2"
 splashscreen = "1.0.0"
+leakCanaryVersion = "2.14"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -47,7 +48,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended"}
-
+#navigation
 navigation =  { module ="androidx.navigation:navigation-compose", version.ref = "nav_version"}
 serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializationJson"}
 #hilt
@@ -62,7 +63,6 @@ retrofit-converter-gson = { module = "com.squareup.retrofit2:converter-gson", ve
 google-gson = { group = "com.google.code.gson", name = "gson", version.ref = "gsonVersion" }
 logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref="loggingInterceptorVersion"}
 
-
 #coil
 coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
 coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version.ref = "coil" }
@@ -70,6 +70,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 libphonenuumber = { module = "com.googlecode.libphonenumber:libphonenumber", version.ref ="libphonenumberVersion"}
 google-fonts = { module = "androidx.compose.ui:ui-text-google-fonts", version.ref= "google-fonts-version" }
 
+#testing
 mockk = { module = "io.mockk:mockk", version.ref = "mockkVersion"}
 turbine = { module = "app.cash.turbine:turbine", version.ref = "turbineVersion" }
 coroutine-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutineTestVersion" }
@@ -82,6 +83,8 @@ room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomVersion" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomVersion" }
 room-testing = { module = "androidx.room:room-testing", version.ref = "roomVersion" }
 room-paging = { module = "androidx.room:room-paging", version.ref = "roomVersion" }
+
+leak-canary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanaryVersion" }
 
 
 [plugins]

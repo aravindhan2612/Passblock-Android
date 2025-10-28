@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ab.an.domain.repository.AppSettingsDataStoreRepository
 import com.ab.an.presentation.navigation.RootRoute
-import com.ab.an.passblock.SplashState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -21,16 +20,29 @@ import javax.inject.Inject
 class MainActivityViewModel @Inject constructor(
     private val appSettingsDataStoreRepository: AppSettingsDataStoreRepository
 ) : ViewModel(){
-    private val _state = MutableStateFlow(SplashState())
+    private val _state = MutableStateFlow(MainState())
     val state = _state.onStart {
-        loadData()
+        setRoute()
+        getThemeMode()
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000L),
-        SplashState()
+        MainState()
     )
 
-    private fun loadData() {
+    private fun getThemeMode() {
+        viewModelScope.launch {
+            appSettingsDataStoreRepository.themeMode.collect { themeMode ->
+                _state.update {
+                    it.copy(
+                        theme = themeMode
+                    )
+                }
+            }
+        }
+    }
+
+    private fun setRoute() {
         viewModelScope.launch {
             val appData = listOf(
                 async {

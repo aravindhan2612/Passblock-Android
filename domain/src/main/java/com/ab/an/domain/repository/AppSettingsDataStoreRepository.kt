@@ -22,4 +22,8 @@ interface AppSettingsDataStoreRepository {
     fun getAppSettings(): Flow<AppSettings>
 
     fun logout(): Flow<Boolean>
+
+    suspend fun saveThemeMode(mode: String)
+
+    val themeMode: Flow<String?>
 }

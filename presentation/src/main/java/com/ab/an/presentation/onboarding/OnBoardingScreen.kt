@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -88,7 +89,7 @@ fun OnboardingScreen(
             ) {
                 repeat(pagerState.pageCount) { iteration ->
                     val color =
-                        if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer
+                        if (pagerState.currentPage == iteration) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.outlineVariant
                     Box(
                         modifier = Modifier
                             .padding(20.dp)
@@ -97,7 +98,7 @@ fun OnboardingScreen(
                             .clip(RoundedCornerShape(5.dp))
                             .border(
                                 width = 1.dp,
-                                color = MaterialTheme.colorScheme.onSurface,
+                                color = Color.Transparent,
                                 shape = RoundedCornerShape(5.dp)
                             )
                             .background(color)
@@ -133,6 +134,7 @@ fun OnboardingScreen(
                     },
                     modifier = Modifier.fillMaxWidth(),
                     label = stringResource(R.string.already_have_an_account),
+                    labelFontSize = 18.sp
                 )
             }
         }

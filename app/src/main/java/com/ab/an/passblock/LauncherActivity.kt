@@ -26,7 +26,9 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val state by viewModel.state.collectAsStateWithLifecycle()
-            PassblockTheme {
+            PassblockTheme(
+                state.theme
+            ) {
                 state.route?.let {
                     RootGraph(
                         startDestination = it
