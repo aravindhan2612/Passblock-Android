@@ -7,7 +7,7 @@ junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.10.1"
-composeBom = "2024.09.00"
+composeBom = "2025.11.01"
 appcompat = "1.7.1"
 material = "1.10.0"
 nav_version = "2.9.3"
@@ -29,6 +29,7 @@ coroutineTestVersion = "1.10.2"
 roomVersion = "2.7.2"
 splashscreen = "1.0.0"
 leakCanaryVersion = "2.14"
+material3Version = "1.5.0-alpha09"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,7 +45,7 @@ androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
 androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
-androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3", version.ref="material3Version"}
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 material-icons-extended = { group = "androidx.compose.material", name = "material-icons-extended"}
